@@ -30,13 +30,13 @@ body{
 .footer-row p{
     margin: 10px;
     color: #737373;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .footer-row a{
     color: #737373;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     margin: 0 10px;
 }
 
@@ -72,6 +72,7 @@ body{
     text-align: center;
     font-weight: 400;
     margin-top: 150px;
+    letter-spacing: -2px;
 }
 
 .main-title span{
@@ -194,4 +195,45 @@ body{
     font-size:20px;
     font-weight:bold;
     margin-top:28px;
+}
+
+
+.suggestedbar{
+    position: absolute;
+    left: 100vh;
+}
+
+.sidebar{
+    position: absolute;
+    padding:40px;
+}
+
+.feed-container{
+    padding:40px;
+}
+
+.post{
+    margin-bottom:50px;
+}
+
+.post img{
+    width:100%;
+
+    margin-bottom:15px;
+}
+.bi-heart-fill{
+    color:red;
+    font-size:20px;
+}
+.bi bi-chat{
+    color:rgb(0, 0, 0);
+    font-size:20px;
+}
+.bi bi-send{
+    color:rgb(0, 0, 0);
+    font-size:20px;
+}
+
+.suggestions{
+    padding:40px;
 }

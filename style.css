@@ -197,43 +197,253 @@ body{
     margin-top:28px;
 }
 
-
-.suggestedbar{
-    position: absolute;
-    left: 100vh;
+/*feed page styles - feed page styles - feed page styles - feed page styles - feed page styles*/
+ .instagram-logo-link {
+    display: block;
+    margin-bottom: 33px;
+    padding-left: 12px;
 }
 
-.sidebar{
-    position: absolute;
-    padding:40px;
+.instagram-sidebar-logo {
+    width: 23px;
+    height: 23px;
+    filter: grayscale(100%) contrast(200%);
 }
 
-.feed-container{
-    padding:40px;
+
+.feed-page-wrapper {
+    min-height: 100vh;
+    display: block;
 }
 
-.post{
-    margin-bottom:50px;
+.feed-layout {
+    display: flex;
+    align-items: flex-start;
 }
 
-.post img{
-    width:100%;
-
-    margin-bottom:15px;
-}
-.bi-heart-fill{
-    color:red;
-    font-size:20px;
-}
-.bi bi-chat{
-    color:rgb(0, 0, 0);
-    font-size:20px;
-}
-.bi bi-send{
-    color:rgb(0, 0, 0);
-    font-size:20px;
+.feed-sidebar {
+    min-height: 100vh;
+    width: 90px;
+    padding: 25px 15px;
+    position: sticky;
+    top: 0;
+    transition: width 0.3s;
+    overflow: hidden;
 }
 
-.suggestions{
-    padding:40px;
+.instagram-title {
+    font-size: 30px;
+    margin-bottom: 35px;
+    font-family: cursive;
+}
+
+.sidebar-menu {
+    margin-top: 235px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: black;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin-bottom: 3px;
+    width: fit-content;
+}
+
+.sidebar-item i {
+    width: 29px;
+    font-size: 26px;
+    text-align: center;
+}
+
+.sidebar-item:hover{
+    background-color: #f2f2f2;
+}
+
+.sidebar-item span {
+    display: none;
+}
+
+.feed-sidebar:hover .sidebar-item span {
+    display: inline;
+}
+
+.logout-button {
+    display: block;
+    margin-top: 45px;
+    color: #0866e8;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.main-feed {
+    max-width: 330px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+.stories-box {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    border: none;
+    padding: 10px 0;
+    margin-bottom: 25px;
+    overflow: visible;
+}
+
+.story {
+    text-align: center;
+    font-size: 12px;
+}
+
+.story img {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    border: 3px solid #e1306c;
+    padding: 2px;
+}
+
+.story p {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.instagram-post {
+    width: 60%;
+    margin: 0 auto 35px auto;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.post-header img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.post-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #737373;
+}
+
+.post-image {
+    display: block;
+    width: 100%;
+    max-height: 560px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.post-actions {
+    font-size: 28px;
+    margin-top: 12px;
+}
+
+.post-actions span {
+    margin-right: 15px;
+}
+
+.save-icon {
+    float: right;
+    margin-right: 0;
+}
+
+.likes {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.caption {
+    margin-bottom: 5px;
+}
+
+.comments {
+    color: #737373;
+}
+
+.profile-small {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.profile-small img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.profile-small p {
+    margin: 0;
+    color: #737373;
+    font-size: 13px;
+}
+
+.profile-small strong {
+    font-size: 13px;
+}
+
+
+.suggestions-area {
+    max-width: 360px;
+    padding-top: 35px;
+    padding-left: 25px;
+    position: relative;
+    left: -180px;
+}
+
+
+.suggestions-title {
+    display: flex;
+    justify-content: space-between;
+    color: #737373;
+    margin-bottom: 20px;
+    width: 280px;
+}
+
+
+.suggestions-title span {
+    color: black;
+    font-size: 13px;
+}
+
+.suggestion-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 13px;
+    width: 260px;
+}
+
+.suggestion-user span {
+    color: #737373;
+}
+
+.suggestion-user strong {
+    color: black;
+}
+
+.suggestion-user a {
+    color: #0095f6;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 13px;
 }

@@ -197,7 +197,7 @@ body{
     margin-top:28px;
 }
 
-/*feed page styles - feed page styles - feed page styles - feed page styles - feed page styles*/
+/*feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles*/
  .instagram-logo-link {
     display: block;
     margin-bottom: 33px;
@@ -270,6 +270,13 @@ body{
 
 .feed-sidebar:hover .sidebar-item span {
     display: inline;
+}
+
+.sidebar-profile-image {
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .logout-button {
@@ -473,5 +480,299 @@ body{
 }
 
 .footer-copyright {
-    margin-top: 25px !important;
+    margin-top: 25px !important; /*the reason for !important is to override the margin-top set on the .instagram-footer p selector*/
+}
+
+/* Create-post window (Feed page) */
+
+.create-post-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+.create-post-overlay.visible {
+    display: flex;
+}
+
+.create-post-window {
+    width: 440px;
+    max-width: 90%;
+    padding: 25px;
+
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.create-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.create-post-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-create-post {
+    border: none;
+    background: transparent;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.create-post-window label {
+    display: block;
+    margin: 14px 0 6px;
+    font-weight: bold;
+}
+
+.create-post-input {
+    width: 100%;
+    padding: 10px;
+
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+}
+
+.create-post-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#post-location { /*the hashtag is so it'll only affect the location input since its a unique field, not the caption textarea*/
+    margin-bottom: 12px;
+}
+
+.publish-post-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 11px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #0095f6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.publish-post-button:hover {
+    background-color: #007fd1;
+}
+
+.create-post-error {
+    min-height: 20px;
+    margin: 8px 0 0;
+    color: #ed4956;
+    font-size: 13px;
+}
+
+
+.text-post-content {
+    min-height: 220px;
+    padding: 35px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #f4f4f4;
+    border-radius: 4px;
+
+    font-size: 24px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.post-video {
+    display: block;
+    width: 100%;
+    max-height: 560px;
+    background-color: black;
+    border-radius: 4px;
+}
+
+/* Successful creation message */
+
+.new-post-message {
+    display: none;
+    width: 60%;
+    margin: 0 auto 18px;
+    padding: 10px;
+
+    background-color: #e7f7ed;
+    border: 1px solid #58b979;
+    border-radius: 8px;
+
+    color: #24743f;
+    text-align: center;
+    font-weight: bold;
+}
+
+.new-post-message.visible {
+    display: block;
+}
+
+/* Highlight the new post */
+
+.newly-created-post {
+    animation: highlight-new-post 2.2s ease;
+}
+
+@keyframes highlight-new-post {
+    0% {
+        background-color: #dff4ff;
+        transform: scale(1.02);
+    }
+
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+}
+
+/* Delete post button */
+.post-user-info {
+    flex: 1;
+}
+
+.delete-post-button {
+    border: none;
+    background-color: transparent;
+    color: #737373;
+    font-size: 20px;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.delete-post-button:hover {
+    color: #ed4956;
+    background-color: #f5f5f5;
+}
+
+/* Search and filter popup */
+.search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.search-overlay.visible {
+    display: block;
+}
+
+.search-window {
+    position: absolute;
+    top: 0;
+    left: 90px;
+
+    width: 400px;
+    height: 100vh;
+    padding: 30px 24px;
+
+    background-color: white;
+    border-right: 1px solid #dbdbdb;
+    border-radius: 0 16px 16px 0;
+    box-shadow: 4px 0 18px rgba(0, 0, 0, 0.15);
+
+    overflow-y: auto;
+}
+
+.search-window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-window-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-search-panel {
+    border: none;
+    background-color: transparent;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.search-window label {
+    display: block;
+    margin: 14px 0 6px;
+    font-weight: bold;
+}
+
+.search-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    background-color: white;
+}
+
+#search-results-message {
+    min-height: 20px;
+    margin: 12px 0 0;
+    color: #737373;
+    font-size: 13px;
+}
+
+.apply-search-button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 10px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #0095f6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.apply-search-button:hover {
+    background-color: #007fd1;
+}
+
+.no-posts-message {
+    display: none;
+
+    width: 100%;
+    max-width: 470px;
+    margin: 40px auto;
+    padding: 30px;
+
+    color: #737373;
+    text-align: center;
+    font-size: 18px;
+
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+    background-color: #fafafa;
+}
+
+.no-posts-message.visible {
+    display: block;
 }

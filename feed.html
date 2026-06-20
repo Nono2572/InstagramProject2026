@@ -4,10 +4,11 @@
 <head>
     <title>Instagram</title>
     <link rel="icon" type="image/png" href="images/LogoTransparent.png">
-
-   <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body class="instagram-feed-page">
@@ -19,7 +20,7 @@
             <!-- Left Sidebar -->
            <div class="col-2 feed-sidebar">
 
-            <a href="feed.html" class="instagram-logo-link">
+            <a href="#" class="instagram-logo-link" id="instagram-logo-link">
                 <img src="images/LogoTransparent.png"
                     class="instagram-sidebar-logo"
                     alt="Instagram Logo">
@@ -27,7 +28,7 @@
 
             <div class="sidebar-menu">
 
-            <a class="sidebar-item active" href="feed.html">
+            <a class="sidebar-item active" href="#" id="home-button">
                 <i class="bi bi-house-door-fill"></i>
                 <span>Home</span>
             </a>
@@ -42,7 +43,7 @@
                 <span>Messages</span>
             </a>
 
-            <a class="sidebar-item" href="#">
+            <a class="sidebar-item" href="#" id="open-search-panel">
                 <i class="bi bi-search"></i>
                 <span>Search</span>
             </a>
@@ -52,13 +53,16 @@
                 <span>Notifications</span>
             </a>
 
-            <a class="sidebar-item" href="#">
+                        <a class="sidebar-item" href="#" id="open-create-post">
                 <i class="bi bi-plus-square"></i>
                 <span>Create</span>
             </a>
 
             <a class="sidebar-item" href="#">
-                <i class="bi bi-person-circle"></i>
+                 <img
+                    id="sidebar-profile-image"
+                    class="sidebar-profile-image"
+                    alt="Profile">
                 <span>Profile</span>
             </a>
 
@@ -103,11 +107,17 @@
                         <img src="https://picsum.photos/80/80?random=6">
                         <p>bob</p>
                     </div>
-
+                </div>
+                <div id="new-post-message" class="new-post-message">
+                    New post was added successfully!
                 </div>
 
+            <div id="posts-container">
+                <div id="no-posts-message" class="no-posts-message">
+                No posts matched your search or filter.
+                </div>
                 <!-- Post 1 -->
-                <div class="instagram-post">
+                <div class="instagram-post" data-post-type="image">
 
                     <div class="post-header">
                         <img src="https://picsum.photos/50/50?random=11">
@@ -137,7 +147,7 @@
                 </div>
 
                 <!-- Post 2 -->
-                <div class="instagram-post">
+                <div class="instagram-post" data-post-type="image">
 
                     <div class="post-header">
                         <img src="https://picsum.photos/50/50?random=12">
@@ -167,7 +177,7 @@
                 </div>
 
                 <!-- Post 3 -->
-                <div class="instagram-post">
+                <div class="instagram-post" data-post-type="image">
 
                     <div class="post-header">
                         <img src="https://picsum.photos/50/50?random=13">
@@ -196,13 +206,14 @@
 
                 </div>
 
+                </div>
             </div>
 
             <!-- Right Suggestions -->
             <div class="col-4 suggestions-area">
 
                 <div class="profile-small">
-                    <img src="https://picsum.photos/60/60?random=30">
+                    <img id="current-user-profile" src="images/BlankProfile.jpg" alt="Default profile picture">
                     <div>
                         <strong>college_user</strong>
                         <p>Student Account</p>
@@ -266,7 +277,117 @@
         </div>
 
     </div>
+        <div id="create-post-overlay" class="create-post-overlay"> <!--everything related to creating a post and such-->
 
+            <div class="create-post-window">
+
+                <div class="create-post-header">
+                    <h2>Create new post</h2>
+
+                    <button type="button" id="close-create-post" class="close-create-post">
+                        &times;
+                    </button>
+                </div>
+
+                <form id="create-post-form">
+
+                    <label for="post-type">Post type</label>
+
+                    <select id="post-type" class="create-post-input">
+                        <option value="image">Image post</option>
+                        <option value="video">Video post</option>
+                        <option value="text">Text-only post</option>
+                    </select>
+
+                    <div id="media-input-section">
+                        <label for="post-media">Choose an image</label>
+
+                        <input
+                            type="file"
+                            id="post-media"
+                            class="create-post-input"
+                            accept="image/*">
+                    </div>
+
+                    <label for="post-caption">Post text</label>
+
+                    <textarea
+                        id="post-caption"
+                        class="create-post-input create-post-textarea"
+                        placeholder="Write something..."></textarea>
+
+                    <label for="post-location">Location</label>
+
+                    <input
+                        type="text"
+                        id="post-location"
+                        class="create-post-input"
+                        placeholder="Add a location">
+
+                    <p id="create-post-error" class="create-post-error"></p>
+
+                    <button type="submit" class="publish-post-button">
+                        Share post
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- Search and filter popup -->
+
+        <div id="search-overlay" class="search-overlay">
+
+            <div class="search-window">
+
+                <div class="search-window-header">
+
+                    <h2>Search and filter posts</h2>
+
+                    <button
+                        type="button"
+                        id="close-search-panel"
+                        class="close-search-panel">
+                        &times;
+                    </button>
+
+                </div>
+
+                <label for="post-search-input">
+                    Search by username or post text
+                </label>
+
+                <input
+                    type="text"
+                    id="post-search-input"
+                    class="search-input"
+                    placeholder="Enter search text">
+
+                <label for="post-type-filter">
+                    Post type
+                </label>
+
+                <select
+                    id="post-type-filter"
+                    class="search-input">
+
+                    <option value="all">All post types</option>
+                    <option value="image">Images</option>
+                    <option value="video">Videos</option>
+                    <option value="text">Text only</option>
+
+                </select>
+
+                <button type="button" id="apply-search-button" class="apply-search-button">Search</button>
+                    <p id="search-results-message"></p>
+                <p id="search-results-message"></p>
+
+            </div>
+
+        </div>
+        <script src="feed.js"></script>
 </body>
 
 </html>

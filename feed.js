@@ -32,6 +32,9 @@ const applySearchButton = document.getElementById("apply-search-button");
 let appliedSearchText = "";
 let appliedPostType = "all";
 
+//comments functionlity
+
+
 instagramLogoLink.addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -226,7 +229,7 @@ if (location !== "") {
 
     actions.innerHTML = `
         <span>♡</span>
-        <span>💬</span>
+        <button type="button" class="open-comments-window-button">💬</button>
         <span>↗</span>
         <span class="save-icon">▢</span>
     `;
@@ -263,6 +266,9 @@ if (location !== "") {
     post.appendChild(captionParagraph);
     }
     post.appendChild(comments);
+
+    //comments func
+    addCommentSectionToPost(post);
 
     return post;
 }
@@ -401,3 +407,269 @@ function filterPosts() {
     noPostsMessage.classList.remove("visible");
     }
 }
+
+
+//comments funcs
+let activeCommentsPost = null;
+
+const commentsOverlay = document.createElement("div");
+commentsOverlay.id = "comments-overlay";
+commentsOverlay.classList.add("comments-overlay");
+
+commentsOverlay.innerHTML = `
+    <div class="comments-window">
+        <div class="comments-window-header">
+            <h2>Comments</h2>
+            <button type="button" id="close-comments-window" class="close-comments-window">
+                &times;
+            </button>
+        </div>
+
+        <p id="comments-window-counter" class="comments-window-counter"></p>
+
+        <div id="comments-window-list" class="comments-window-list"></div>
+
+        <p id="comments-window-typing-message" class="typing-message">
+            User is typing a comment...
+        </p>
+
+        <form id="comments-window-form" class="comment-form">
+            <input
+                type="text"
+                id="comments-window-input"
+                class="comment-input"
+                placeholder="Write a comment...">
+
+            <button type="submit" class="send-comment-button">
+                Send
+            </button>
+        </form>
+    </div>
+`;
+
+document.body.appendChild(commentsOverlay);
+
+const closeCommentsWindowButton =
+    document.getElementById("close-comments-window");
+
+const commentsWindowCounter =
+    document.getElementById("comments-window-counter");
+
+const commentsWindowList =
+    document.getElementById("comments-window-list");
+
+const commentsWindowForm =
+    document.getElementById("comments-window-form");
+
+const commentsWindowInput =
+    document.getElementById("comments-window-input");
+
+const commentsWindowTypingMessage =
+    document.getElementById("comments-window-typing-message");
+
+
+function addCommentSectionToPost(post) {
+    if (post.querySelector(".comments-feature")) {
+        return;
+    }
+
+    const existingCommentsText = post.querySelector(".comments");
+    let initialCommentsCount = 0;
+
+    if (existingCommentsText) {
+        const numberMatch =
+            existingCommentsText.textContent.match(/\d+/);
+
+        if (numberMatch) {
+            initialCommentsCount = Number(numberMatch[0]);
+        }
+
+        existingCommentsText.style.display = "none";
+    }
+
+    post.dataset.commentsCount = initialCommentsCount;
+
+    if (!post.commentsListData) {
+        post.commentsListData = [];
+    }
+
+    const commentsFeature = document.createElement("div");
+    commentsFeature.classList.add("comments-feature");
+
+    const commentsCounter = document.createElement("span");
+    commentsCounter.classList.add("comments-counter");
+    commentsCounter.textContent =
+        initialCommentsCount + " comments";
+
+    const showCommentsButton = document.createElement("button");
+    showCommentsButton.type = "button";
+    showCommentsButton.classList.add("show-comments-button");
+    showCommentsButton.textContent = "Show comments";
+
+    commentsFeature.append(commentsCounter, showCommentsButton);
+
+    post.appendChild(commentsFeature);
+}
+
+
+function updateCommentsCounter(post) {
+    const commentsCounter =
+        post.querySelector(".comments-counter");
+
+    const commentsCount =
+        Number(post.dataset.commentsCount);
+
+    if (commentsCounter) {
+        commentsCounter.textContent =
+            commentsCount + " comments";
+    }
+
+    if (post === activeCommentsPost) {
+        commentsWindowCounter.textContent =
+            commentsCount + " comments";
+    }
+}
+
+
+function renderCommentsWindow() {
+    commentsWindowList.innerHTML = "";
+
+    if (!activeCommentsPost) {
+        return;
+    }
+
+    const comments =
+        activeCommentsPost.commentsListData || [];
+
+    if (comments.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.classList.add("empty-comments-message");
+        emptyMessage.textContent =
+            "No new comments yet.";
+
+        commentsWindowList.appendChild(emptyMessage);
+        return;
+    }
+
+    comments.forEach(function (commentText) {
+        const comment = document.createElement("p");
+        comment.classList.add("single-comment");
+
+        const username = document.createElement("strong");
+        username.textContent = "college_user ";
+
+        comment.append(
+            username,
+            document.createTextNode(commentText)
+        );
+
+        commentsWindowList.appendChild(comment);
+    });
+}
+
+
+function openCommentsWindow(post) {
+    activeCommentsPost = post;
+
+    commentsWindowInput.value = "";
+    commentsWindowTypingMessage.classList.remove("visible");
+
+    updateCommentsCounter(post);
+    renderCommentsWindow();
+
+    commentsOverlay.classList.add("visible");
+    commentsWindowInput.focus();
+}
+
+
+function closeCommentsWindow() {
+    commentsOverlay.classList.remove("visible");
+    commentsWindowInput.value = "";
+    commentsWindowTypingMessage.classList.remove("visible");
+    activeCommentsPost = null;
+}
+
+
+function addCommentToActivePost(commentText) {
+    if (!activeCommentsPost) {
+        return;
+    }
+
+    if (!activeCommentsPost.commentsListData) {
+        activeCommentsPost.commentsListData = [];
+    }
+
+    activeCommentsPost.commentsListData.push(commentText);
+
+    activeCommentsPost.dataset.commentsCount =
+        Number(activeCommentsPost.dataset.commentsCount) + 1;
+
+    updateCommentsCounter(activeCommentsPost);
+    renderCommentsWindow();
+}
+
+
+postsContainer.querySelectorAll(".instagram-post").forEach(function (post) {
+    addCommentSectionToPost(post);
+});
+
+
+postsContainer.addEventListener("click", function (event) {
+    const commentsIconButton =
+        event.target.closest(".open-comments-window-button");
+
+    const showCommentsButton =
+        event.target.closest(".show-comments-button");
+
+    if (!commentsIconButton && !showCommentsButton) {
+        return;
+    }
+
+    const post =
+        event.target.closest(".instagram-post");
+
+    if (!post) {
+        return;
+    }
+
+    openCommentsWindow(post);
+});
+
+
+commentsWindowForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const commentText =
+        commentsWindowInput.value.trim();
+
+    if (commentText === "") {
+        return;
+    }
+
+    addCommentToActivePost(commentText);
+
+    commentsWindowInput.value = "";
+    commentsWindowTypingMessage.classList.remove("visible");
+    commentsWindowInput.focus();
+});
+
+
+commentsWindowInput.addEventListener("input", function () {
+    if (commentsWindowInput.value.trim() !== "") {
+        commentsWindowTypingMessage.classList.add("visible");
+    } else {
+        commentsWindowTypingMessage.classList.remove("visible");
+    }
+});
+
+
+closeCommentsWindowButton.addEventListener("click", function () {
+    closeCommentsWindow();
+});
+
+
+commentsOverlay.addEventListener("click", function (event) {
+    if (event.target === commentsOverlay) {
+        closeCommentsWindow();
+    }
+});

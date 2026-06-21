@@ -195,6 +195,20 @@ body{
     font-size:20px;
     font-weight:bold;
     margin-top:28px;
+    /*margin-bottom: 50px;*/
+}
+
+.login-error-message {
+    min-height: 20px;
+    margin: 6px 0 12px;
+    color: #ed4956;
+    font-size: 14px;
+    text-align: left;
+    padding-left: 18px;
+}
+
+.input-error {
+    border-color: #ed4956 !important;
 }
 
 /*feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles*/
@@ -775,4 +789,207 @@ body{
 
 .no-posts-message.visible {
     display: block;
+}
+
+
+/* Comments feature */
+.comments-feature {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.show-comments-button {
+    border: none;
+    background-color: transparent;
+    color: #0095f6;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.show-comments-button:hover {
+    text-decoration: underline;
+}
+
+.comments-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.comments-overlay.visible {
+    display: flex;
+}
+
+.comments-window {
+    width: 460px;
+    max-width: 90%;
+    max-height: 80vh;
+    padding: 22px;
+
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.comments-window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comments-window-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-comments-window {
+    border: none;
+    background-color: transparent;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.comments-window-counter {
+    margin: 0 0 12px;
+    color: #737373;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.comments-window-list {
+    min-height: 120px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 10px 0;
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.empty-comments-message {
+    margin: 8px 0;
+    color: #737373;
+    font-size: 14px;
+}
+
+.single-comment {
+    margin: 8px 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.typing-message {
+    display: none;
+    margin: 8px 0 0;
+    color: #737373;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.typing-message.visible {
+    display: block;
+}
+
+.open-comments-window-button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    margin-right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.comments-window form,
+#comments-window-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.comments-window input,
+#comments-window-input {
+    flex: 1;
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.comments-window input:focus,
+#comments-window-input:focus {
+    border-color: #0095f6;
+}
+
+.comments-window button,
+.send-comment-button {
+    border: none;
+}
+
+.send-comment-button {
+    min-width: 70px;
+    height: 42px;
+    padding: 0 16px;
+
+    border-radius: 8px;
+    background-color: #0095f6;
+
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.send-comment-button:hover {
+    background-color: #007fd1;
+}
+
+.close-comments-window {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+
+    color: black;
+    font-size: 30px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.close-comments-window:hover {
+    background-color: #f2f2f2;
+}
+
+.comments-window-list {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.typing-message {
+    min-height: 18px;
 }

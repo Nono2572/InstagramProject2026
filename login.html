@@ -39,21 +39,25 @@
                         Log into Instagram
                     </h1>
 
-                    <input type="text"
-                        class="form-control login-input"
-                        placeholder="Username, email or mobile number">
+                    <form id="login-form" novalidate>
 
-                    <br>
+                        <input type="text"
+                            id="login-identifier"
+                            class="form-control login-input"
+                            placeholder="Username, email or mobile number">
+                        <p id="identifier-error" class="login-error-message"></p>
 
-                    <input type="password"
-                        class="form-control login-input"
-                        placeholder="Password">
+                        <input type="password"
+                            id="login-password"
+                            class="form-control login-input"
+                            placeholder="Password">
+                        <p id="password-error" class="login-error-message"></p>
 
-                    <br>
+                        <button type="submit" class="login-button">
+                            Log in
+                        </button>
 
-                    <button type="button" class="login-button" onclick="location.href='feed.html'">
-                        Log in
-                    </button>
+                    </form>
 
                     <br><br>
 
@@ -105,6 +109,7 @@
 
         </div>
     </div>
+    <script src="login.js"></script>
 </body>
 
 </html>

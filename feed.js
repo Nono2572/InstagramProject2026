@@ -1,4 +1,4 @@
-/*Feed.js is the javscript page that controls code in feed page*/
+/Feed.js is the javscript page that controls code in feed page/
 const openCreateButton = document.getElementById("open-create-post");
 const closeCreateButton = document.getElementById("close-create-post");
 const createPostOverlay = document.getElementById("create-post-overlay");
@@ -230,7 +230,11 @@ if (location !== "") {
     actions.innerHTML = `
         <button type="button" class="like-button">♡</button>
         <button type="button" class="open-comments-window-button">💬</button>
+<<<<<<< Updated upstream
         <button type="button" class="share-button">↗</button>
+=======
+        <button type="button" class="share-button">↗️</button>
+>>>>>>> Stashed changes
         <span class="save-icon">▢</span>
 `   ;
 
@@ -693,7 +697,11 @@ postsContainer.addEventListener("click", function (event) {
         currentLikes--;
     } else {
         likeButton.classList.add("liked");
+<<<<<<< Updated upstream
         likeButton.innerHTML = "♥";
+=======
+        likeButton.innerHTML = "♥️";
+>>>>>>> Stashed changes
         currentLikes++;
         likeButton.classList.add("like-effect");
 

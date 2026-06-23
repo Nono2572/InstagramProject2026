@@ -195,7 +195,7 @@ body{
     font-size:20px;
     font-weight:bold;
     margin-top:28px;
-    /*margin-bottom: 50px;*/
+    /margin-bottom: 50px;/
 }
 
 .login-error-message {
@@ -211,7 +211,7 @@ body{
     border-color: #ed4956 !important;
 }
 
-/*feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles*/
+/feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles - feed page styles/
  .instagram-logo-link {
     display: block;
     margin-bottom: 33px;
@@ -494,7 +494,7 @@ body{
 }
 
 .footer-copyright {
-    margin-top: 25px !important; /*the reason for !important is to override the margin-top set on the .instagram-footer p selector*/
+    margin-top: 25px !important; /the reason for !important is to override the margin-top set on the .instagram-footer p selector/
 }
 
 /* Create-post window (Feed page) */
@@ -564,7 +564,7 @@ body{
     resize: vertical;
 }
 
-#post-location { /*the hashtag is so it'll only affect the location input since its a unique field, not the caption textarea*/
+#post-location { /the hashtag is so it'll only affect the location input since its a unique field, not the caption textarea/
     margin-bottom: 12px;
 }
 

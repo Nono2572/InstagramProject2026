@@ -228,11 +228,11 @@ if (location !== "") {
     actions.classList.add("post-actions");
 
     actions.innerHTML = `
-        <span>♡</span>
+        <button type="button" class="like-button">♡</button>
         <button type="button" class="open-comments-window-button">💬</button>
-        <span>↗</span>
+        <button type="button" class="share-button">↗️</button>
         <span class="save-icon">▢</span>
-    `;
+`   ;
 
     const likes = document.createElement("p");
     likes.classList.add("likes");
@@ -673,3 +673,106 @@ commentsOverlay.addEventListener("click", function (event) {
         closeCommentsWindow();
     }
 });
+
+/* Section 1 - Like functionality */
+postsContainer.addEventListener("click", function (event) {
+    const likeButton = event.target.closest(".like-button");
+
+    if (!likeButton) {
+        return;
+    }
+
+    const post = likeButton.closest(".instagram-post");
+    const likesText = post.querySelector(".likes strong");
+
+    let currentLikes = parseInt(likesText.textContent);
+
+    if (likeButton.classList.contains("liked")) {
+        likeButton.classList.remove("liked");
+        likeButton.innerHTML = "♡";
+        currentLikes--;
+    } else {
+        likeButton.classList.add("liked");
+        likeButton.innerHTML = "♥️";
+        currentLikes++;
+        likeButton.classList.add("like-effect");
+
+        window.setTimeout(function () {
+            likeButton.classList.remove("like-effect");
+        }, 300);
+    }
+
+    likesText.textContent = currentLikes + " likes";
+});
+
+
+/* Section 4 - Light / Dark mode */
+const darkModeButton = document.getElementById("dark-mode-button");
+
+darkModeButton.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+        darkModeButton.querySelector("span").innerHTML = "Light mode";
+        darkModeButton.querySelector("i").className = "bi bi-sun";
+    } else {
+        darkModeButton.querySelector("span").innerHTML = "Dark mode";
+        darkModeButton.querySelector("i").className = "bi bi-moon";
+    }
+});
+
+
+/* Section 5 - Back to top button */
+const backToTopButton = document.getElementById("back-to-top-button");
+
+window.onscroll = function () {
+    if (window.scrollY > 300) {
+        backToTopButton.classList.add("visible");
+    } else {
+        backToTopButton.classList.remove("visible");
+    }
+};
+
+backToTopButton.addEventListener("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
+
+/* Section 10 - Share popup */
+const shareOverlay = document.getElementById("share-overlay");
+const closeShareWindow = document.getElementById("close-share-window");
+const shareMessage = document.getElementById("share-message");
+
+postsContainer.addEventListener("click", function (event) {
+    const shareButton = event.target.closest(".share-button");
+
+    if (!shareButton) {
+        return;
+    }
+
+    shareMessage.innerHTML = "";
+    shareOverlay.classList.add("visible");
+});
+
+closeShareWindow.addEventListener("click", function () {
+    shareOverlay.classList.remove("visible");
+});
+
+shareOverlay.addEventListener("click", function (event) {
+    if (event.target === shareOverlay) {
+        shareOverlay.classList.remove("visible");
+    }
+});
+
+const shareOptions = document.getElementsByClassName("share-option");
+
+for (let i = 0; i < shareOptions.length; i++) {
+    shareOptions[i].onclick = function () {
+        shareMessage.innerHTML = "Post shared successfully!";
+    };
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Profile</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+</head>
+
+<body>
+
+    <header>
+
+        <nav class="main-nav">
+
+            <a
+                class="logo"
+                href="profile.html"
+            >
+                InstagramProject2026
+            </a>
+
+            <div>
+
+                <a
+                    class="nav-link"
+                    href="editProfile.html"
+                >
+                    Edit Profile
+                </a>
+
+                <button
+                    id="logout-btn"
+                    class="logout-btn"
+                >
+                    Logout
+                </button>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+    <main class="page-container">
+
+        <section class="auth-card">
+
+            <h1>My Profile</h1>
+
+            <p>
+                <strong>Username:</strong>
+                <span id="username"></span>
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Email:</strong>
+                <span id="email"></span>
+            </p>
+
+            <br>
+
+            <p>
+                <strong>User ID:</strong>
+                <span id="user-id"></span>
+            </p>
+
+            <br>
+
+            <button
+                id="delete-account-btn"
+            >
+                Delete Account
+            </button>
+
+            <p
+                id="message"
+                class="message"
+            ></p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        Final Web Applications Project
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/profile.js"></script>
+
+</body>
+
+</html>

@@ -1,319 +1,330 @@
-const crypto = require('crypto');
-const User = require('../models/userModel');
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
 
-function createPasswordData(password) {
-    const salt = crypto.randomBytes(16).toString('hex');
+function getErrorMessage(error) {
+    if (error.code === 11000) {
+        const duplicatedField = Object.keys(error.keyPattern)[0];
 
-    const hash = crypto
-        .scryptSync(password, salt, 64)
-        .toString('hex');
-
-    return {
-        passwordSalt: salt,
-        passwordHash: hash
-    };
-}
-
-function checkPassword(password, salt, savedHash) {
-    const currentHash = crypto.scryptSync(password, salt, 64);
-
-    const savedHashBuffer = Buffer.from(savedHash, 'hex');
-
-    if (currentHash.length !== savedHashBuffer.length) {
-        return false;
+        return duplicatedField + " already exists.";
     }
 
-    return crypto.timingSafeEqual(
-        currentHash,
-        savedHashBuffer
-    );
+    if (error.name === "ValidationError") {
+        const validationError = Object.values(error.errors)[0];
+
+        return validationError.message;
+    }
+
+    return "An unexpected server error occurred.";
 }
 
-async function register(req, res, next) {
+async function registerUser(req, res) {
     try {
-        const fullName = req.body.fullName.trim();
-        const username = req.body.username.trim().toLowerCase();
-        const email = req.body.email.trim().toLowerCase();
-        const password = req.body.password;
-        const confirmPassword = req.body.confirmPassword;
+        const username = String(req.body.username || "").trim();
+        const email = String(req.body.email || "").trim();
+        const password = String(req.body.password || "");
+        const fullName = String(req.body.fullName || "").trim();
 
-        if (!fullName || !username || !email || !password) {
+        if (
+            username === "" ||
+            email === "" ||
+            password === ""
+        ) {
             return res.status(400).json({
                 success: false,
-                message: 'All fields are required'
-            });
-        }
-
-        if (username.length < 3 || username.length > 20) {
-            return res.status(400).json({
-                success: false,
-                message: 'Username must contain between 3 and 20 characters'
+                message: "Username, email and password are required."
             });
         }
 
         if (password.length < 6) {
             return res.status(400).json({
                 success: false,
-                message: 'Password must contain at least 6 characters'
+                message: "Password must contain at least 6 characters."
             });
         }
 
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                success: false,
-                message: 'Passwords do not match'
-            });
-        }
+        const existingUser = await User.findOne({
+            $or: [
+                {
+                    username: username.toLowerCase()
+                },
+                {
+                    email: email.toLowerCase()
+                }
+            ]
+        });
 
-        const existingUsername =
-            await User.findUserByUsername(username);
-
-        if (existingUsername) {
+        if (existingUser) {
             return res.status(409).json({
                 success: false,
-                message: 'Username already exists'
+                message: "Username or email already exists."
             });
         }
 
-        const existingEmail =
-            await User.findUserByEmail(email);
+        const encryptedPassword = await bcrypt.hash(
+            password,
+            10
+        );
 
-        if (existingEmail) {
-            return res.status(409).json({
-                success: false,
-                message: 'Email already exists'
-            });
-        }
-
-        const passwordData = createPasswordData(password);
-
-        const user = await User.createUser({
-            fullName: fullName,
+        const newUser = await User.create({
             username: username,
             email: email,
-            bio: '',
-            profileImage: '',
-            passwordSalt: passwordData.passwordSalt,
-            passwordHash: passwordData.passwordHash,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            password: encryptedPassword,
+            fullName: fullName
         });
 
-        req.session.userId = user._id.toString();
+        req.session.userId = newUser._id.toString();
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
-            message: 'Registration completed successfully',
-            user: user
+            message: "Registration completed successfully.",
+
+            user: {
+                id: newUser._id,
+                username: newUser.username,
+                email: newUser.email,
+                fullName: newUser.fullName,
+                bio: newUser.bio,
+                profileImage: newUser.profileImage
+            }
         });
     } catch (error) {
-        next(error);
+        return res.status(400).json({
+            success: false,
+            message: getErrorMessage(error)
+        });
     }
 }
 
-async function login(req, res, next) {
+async function loginUser(req, res) {
     try {
-        const username = req.body.username
+        const identifier = String(
+            req.body.identifier || ""
+        )
             .trim()
             .toLowerCase();
 
-        const password = req.body.password;
+        const password = String(
+            req.body.password || ""
+        );
 
-        if (!username || !password) {
+        if (
+            identifier === "" ||
+            password === ""
+        ) {
             return res.status(400).json({
                 success: false,
-                message: 'Username and password are required'
+                message: "Username/email and password are required."
             });
         }
 
-        const user = await User.findUserByUsername(username);
+        const user = await User.findOne({
+            $or: [
+                {
+                    username: identifier
+                },
+                {
+                    email: identifier
+                }
+            ]
+        }).select("+password");
 
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: 'Incorrect username or password'
+                message: "Incorrect username/email or password."
             });
         }
 
-        const passwordCorrect = checkPassword(
+        const passwordIsCorrect = await bcrypt.compare(
             password,
-            user.passwordSalt,
-            user.passwordHash
+            user.password
         );
 
-        if (!passwordCorrect) {
+        if (!passwordIsCorrect) {
             return res.status(401).json({
                 success: false,
-                message: 'Incorrect username or password'
+                message: "Incorrect username/email or password."
             });
         }
 
         req.session.userId = user._id.toString();
 
-        res.json({
+        return res.status(200).json({
             success: true,
-            message: 'Login completed successfully'
+            message: "Login completed successfully."
         });
     } catch (error) {
-        next(error);
+        return res.status(500).json({
+            success: false,
+            message: "An unexpected server error occurred."
+        });
     }
 }
 
-function logout(req, res, next) {
+function logoutUser(req, res) {
     req.session.destroy(function (error) {
         if (error) {
-            return next(error);
+            return res.status(500).json({
+                success: false,
+                message: "Logout failed."
+            });
         }
 
-        res.clearCookie('connect.sid');
+        res.clearCookie("connect.sid");
 
-        res.json({
+        return res.status(200).json({
             success: true,
-            message: 'Logout completed successfully'
+            message: "Logged out successfully."
         });
     });
 }
 
-async function getMyProfile(req, res, next) {
+async function getCurrentUser(req, res) {
     try {
-        const user =
-            await User.findUserById(req.session.userId);
+        const user = await User.findById(
+            req.session.userId
+        );
 
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: 'User not found'
+                message: "User was not found."
             });
         }
 
-        res.json({
+        return res.status(200).json({
             success: true,
-            user: user
+
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                fullName: user.fullName,
+                bio: user.bio,
+                profileImage: user.profileImage,
+                createdAt: user.createdAt
+            }
         });
     } catch (error) {
-        next(error);
+        return res.status(500).json({
+            success: false,
+            message: "Could not load the profile."
+        });
     }
 }
 
-async function getPublicProfile(req, res, next) {
+async function updateCurrentUser(req, res) {
     try {
-        const user =
-            await User.findUserById(req.params.id);
+        const updatedFields = {};
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
+        if (req.body.username !== undefined) {
+            updatedFields.username = String(
+                req.body.username
+            ).trim();
         }
 
-        res.json({
-            success: true,
-            user: user
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-async function updateMyProfile(req, res, next) {
-    try {
-        const fullName = req.body.fullName.trim();
-        const bio = req.body.bio.trim();
-        const profileImage =
-            req.body.profileImage.trim();
-
-        if (!fullName) {
-            return res.status(400).json({
-                success: false,
-                message: 'Full name is required'
-            });
+        if (req.body.email !== undefined) {
+            updatedFields.email = String(
+                req.body.email
+            ).trim();
         }
 
-        if (bio.length > 300) {
-            return res.status(400).json({
-                success: false,
-                message: 'Biography is too long'
-            });
+        if (req.body.fullName !== undefined) {
+            updatedFields.fullName = String(
+                req.body.fullName
+            ).trim();
         }
 
-        const user = await User.updateUser(
+        if (req.body.bio !== undefined) {
+            updatedFields.bio = String(
+                req.body.bio
+            ).trim();
+        }
+
+        if (req.body.profileImage !== undefined) {
+            updatedFields.profileImage =
+                String(req.body.profileImage).trim() ||
+                "images/BlankProfile.jpg";
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
             req.session.userId,
+            updatedFields,
             {
-                fullName: fullName,
-                bio: bio,
-                profileImage: profileImage
+                new: true,
+                runValidators: true
             }
         );
 
-        res.json({
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User was not found."
+            });
+        }
+
+        return res.status(200).json({
             success: true,
-            message: 'Profile updated successfully',
-            user: user
+            message: "Profile updated successfully.",
+
+            user: {
+                id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                fullName: updatedUser.fullName,
+                bio: updatedUser.bio,
+                profileImage: updatedUser.profileImage
+            }
         });
     } catch (error) {
-        next(error);
+        return res.status(400).json({
+            success: false,
+            message: getErrorMessage(error)
+        });
     }
 }
 
-async function deleteMyAccount(req, res, next) {
+async function deleteCurrentUser(req, res) {
     try {
-        const deleted =
-            await User.deleteUser(req.session.userId);
+        const deletedUser = await User.findByIdAndDelete(
+            req.session.userId
+        );
 
-        if (!deleted) {
+        if (!deletedUser) {
             return res.status(404).json({
                 success: false,
-                message: 'User not found'
+                message: "User was not found."
             });
         }
 
         req.session.destroy(function (error) {
             if (error) {
-                return next(error);
+                return res.status(500).json({
+                    success: false,
+                    message: "The account was deleted, but the session could not be closed."
+                });
             }
 
-            res.clearCookie('connect.sid');
+            res.clearCookie("connect.sid");
 
-            res.json({
+            return res.status(200).json({
                 success: true,
-                message: 'Account deleted successfully'
+                message: "Account deleted successfully."
             });
         });
     } catch (error) {
-        next(error);
-    }
-}
-
-async function sessionStatus(req, res, next) {
-    try {
-        if (!req.session.userId) {
-            return res.json({
-                success: true,
-                loggedIn: false
-            });
-        }
-
-        const user =
-            await User.findUserById(req.session.userId);
-
-        res.json({
-            success: true,
-            loggedIn: true,
-            user: user
+        return res.status(500).json({
+            success: false,
+            message: "Could not delete the account."
         });
-    } catch (error) {
-        next(error);
     }
 }
 
 module.exports = {
-    register,
-    login,
-    logout,
-    getMyProfile,
-    getPublicProfile,
-    updateMyProfile,
-    deleteMyAccount,
-    sessionStatus
+    registerUser,
+    loginUser,
+    logoutUser,
+    getCurrentUser,
+    updateCurrentUser,
+    deleteCurrentUser
 };

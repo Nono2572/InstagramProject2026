@@ -2,19 +2,24 @@ function requireLogin(req, res, next) {
     if (!req.session.userId) {
         return res.status(401).json({
             success: false,
-            message: 'You must login first'
+            message: "You must log in first."
         });
     }
 
     next();
 }
 
-function requireGuest(req, res, next) {
+function requirePageLogin(req, res, next) {
+    if (!req.session.userId) {
+        return res.redirect("/login.html");
+    }
+
+    next();
+}
+
+function redirectIfLoggedIn(req, res, next) {
     if (req.session.userId) {
-        return res.status(403).json({
-            success: false,
-            message: 'You are already logged in'
-        });
+        return res.redirect("/feed.html");
     }
 
     next();
@@ -22,5 +27,6 @@ function requireGuest(req, res, next) {
 
 module.exports = {
     requireLogin,
-    requireGuest
+    requirePageLogin,
+    redirectIfLoggedIn
 };

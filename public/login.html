@@ -1,111 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Login</title>
+    <title>Instagram</title>
 
     <link
         rel="stylesheet"
-        href="css/style.css"
-    >
+        href="style.css">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/LogoTransparent.png">
 </head>
 
-<body>
+<body class="instagram-login-page">
 
-    <header>
-        <nav class="main-nav">
+    <div class="container-fluid">
 
-            <a
-                class="logo"
-                href="login.html"
-            >
-                InstagramProject2026
-            </a>
+        <div class="row main-content">
 
-            <a
-                class="nav-link"
-                href="register.html"
-            >
-                Register
-            </a>
+            <div class="col-8 left-section">
 
-        </nav>
-    </header>
+                <img
+                    src="images/LogoTransparent.png"
+                    alt="Instagram Logo"
+                    class="left-logo">
 
-    <main class="page-container">
+                <h1 class="main-title">
+                    See everyday moments from<br>
+                    your <span>close friends.</span>
+                </h1>
 
-        <section class="auth-card">
+                <img
+                    src="images/FriendsStory.png"
+                    alt="Instagram Friends"
+                    class="main-image">
 
-            <h1>Login</h1>
+            </div>
 
-            <form id="login-form">
+            <div class="col-4 right-section">
 
-                <label for="username">
-                    Username
-                </label>
+                <div class="login-container">
 
-                <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    minlength="3"
-                    maxlength="20"
-                    placeholder="Enter your username"
-                    autocomplete="username"
-                    required
-                >
+                    <h1>
+                        Log into Instagram
+                    </h1>
 
-                <label for="password">
-                    Password
-                </label>
+                    <form
+                        id="login-form"
+                        novalidate>
 
-                <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    minlength="6"
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
-                    required
-                >
+                        <input
+                            type="text"
+                            id="login-identifier"
+                            class="form-control login-input"
+                            placeholder="Username or email">
 
-                <button type="submit">
-                    Login
-                </button>
+                        <p
+                            id="identifier-error"
+                            class="login-error-message">
+                        </p>
 
-            </form>
+                        <input
+                            type="password"
+                            id="login-password"
+                            class="form-control login-input"
+                            placeholder="Password">
 
-            <p
-                id="message"
-                class="message"
-            ></p>
+                        <p
+                            id="password-error"
+                            class="login-error-message">
+                        </p>
 
-            <p class="switch-page">
+                        <p
+                            id="login-server-error"
+                            class="login-error-message">
+                        </p>
 
-                Do not have an account?
+                        <button
+                            type="submit"
+                            class="login-button">
 
-                <a href="register.html">
-                    Register
-                </a>
+                            Log in
+                        </button>
 
-            </p>
+                    </form>
 
-        </section>
+                    <br><br>
 
-    </main>
+                    <button
+                        type="button"
+                        class="forgot-password-link">
 
-    <footer>
-        Final Web Applications Project
-    </footer>
+                        Forgot password?
+                    </button>
 
-    <script src="js/common.js"></script>
+                    <div class="space-section"></div>
+
+                    <a
+                        href="register.html"
+                        class="create-account-button user-page-link-button">
+
+                        Create new account
+                    </a>
+
+                    <p class="meta-text">
+                        ∞ Meta
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row footer-row">
+
+            <div class="col-12">
+
+                <a href="#">Meta</a>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Jobs</a>
+                <a href="#">Help</a>
+                <a href="#">API</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Locations</a>
+                <a href="#">Instagram Lite</a>
+                <a href="#">Meta AI</a>
+                <a href="#">Threads</a>
+
+                <p>
+                    © 2026 Instagram from Colman
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <script src="js/login.js"></script>
 
 </body>

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Instagram - Register</title>
+    <title>Instagram - Edit Profile</title>
 
     <link
         rel="stylesheet"
@@ -24,96 +24,88 @@
 
         <div class="user-page-card">
 
-            <img
-                src="images/LogoTransparent.png"
-                class="user-page-logo"
-                alt="Instagram Logo">
-
             <h1>
-                Create new account
+                Edit profile
             </h1>
 
-            <p class="user-page-description">
-                Sign up to join the social network.
-            </p>
-
             <form
-                id="register-form"
+                id="edit-profile-form"
                 novalidate>
 
-                <label for="register-full-name">
+                <label for="edit-full-name">
                     Full name
                 </label>
 
                 <input
                     type="text"
-                    id="register-full-name"
+                    id="edit-full-name"
                     class="user-page-input"
                     maxlength="60">
 
-                <label for="register-username">
+                <label for="edit-username">
                     Username
                 </label>
 
                 <input
                     type="text"
-                    id="register-username"
+                    id="edit-username"
                     class="user-page-input"
                     maxlength="20">
 
-                <label for="register-email">
+                <label for="edit-email">
                     Email
                 </label>
 
                 <input
                     type="email"
-                    id="register-email"
+                    id="edit-email"
                     class="user-page-input">
 
-                <label for="register-password">
-                    Password
+                <label for="edit-bio">
+                    Bio
+                </label>
+
+                <textarea
+                    id="edit-bio"
+                    class="user-page-input user-page-textarea"
+                    maxlength="150"></textarea>
+
+                <label for="edit-profile-image">
+                    Profile image URL
                 </label>
 
                 <input
-                    type="password"
-                    id="register-password"
-                    class="user-page-input">
-
-                <label for="register-confirm-password">
-                    Confirm password
-                </label>
-
-                <input
-                    type="password"
-                    id="register-confirm-password"
-                    class="user-page-input">
+                    type="text"
+                    id="edit-profile-image"
+                    class="user-page-input"
+                    placeholder="images/BlankProfile.jpg">
 
                 <p
-                    id="register-error"
-                    class="user-page-error">
+                    id="edit-profile-message"
+                    class="user-page-message">
                 </p>
 
                 <button
                     type="submit"
                     class="user-page-primary-button">
 
-                    Register
+                    Save changes
                 </button>
 
             </form>
 
             <a
-                href="login.html"
+                href="profile.html"
                 class="user-page-link">
 
-                Already have an account? Log in
+                Cancel
             </a>
 
         </div>
 
     </div>
 
-    <script src="js/register.js"></script>
+    <script src="js/edit-profile.js"></script>
 
 </body>
 

@@ -1,35 +1,16 @@
-const { MongoClient } = require('mongodb');
-
-const connectionURL = 'mongodb://127.0.0.1:27017';
-const databaseName = 'social_network';
-
-let database;
+const mongoose = require("mongoose");
 
 async function connectToDatabase() {
-    const client = new MongoClient(connectionURL);
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
 
-    await client.connect();
-
-    database = client.db(databaseName);
-
-    await database.collection('users').createIndex(
-        { username: 1 },
-        { unique: true }
-    );
-
-    await database.collection('users').createIndex(
-        { email: 1 },
-        { unique: true }
-    );
-
-    console.log('Connected to MongoDB');
-}
-
-function getDatabase() {
-    return database;
+        console.log("Connected to MongoDB successfully.");
+    } catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
+    }
 }
 
 module.exports = {
-    connectToDatabase,
-    getDatabase
+    connectToDatabase
 };

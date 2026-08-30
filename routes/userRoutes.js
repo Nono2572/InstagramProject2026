@@ -1,60 +1,52 @@
-const express = require('express');
-
-const userController =
-    require('../controllers/userController');
+const express = require("express");
 
 const {
-    requireLogin,
-    requireGuest
-} = require('../middleware/authMiddleware');
+    registerUser,
+    loginUser,
+    logoutUser,
+    getCurrentUser,
+    updateCurrentUser,
+    deleteCurrentUser
+} = require("../controllers/userController");
+
+const {
+    requireLogin
+} = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.post(
-    '/register',
-    requireGuest,
-    userController.register
+    "/register",
+    registerUser
 );
 
 router.post(
-    '/login',
-    requireGuest,
-    userController.login
+    "/login",
+    loginUser
 );
 
 router.post(
-    '/logout',
+    "/logout",
     requireLogin,
-    userController.logout
+    logoutUser
 );
 
 router.get(
-    '/session',
-    userController.sessionStatus
-);
-
-router.get(
-    '/me',
+    "/me",
     requireLogin,
-    userController.getMyProfile
-);
-
-router.get(
-    '/:id',
-    requireLogin,
-    userController.getPublicProfile
+    getCurrentUser
 );
 
 router.put(
-    '/me',
+    "/me",
     requireLogin,
-    userController.updateMyProfile
+    updateCurrentUser
 );
 
 router.delete(
-    '/me',
+    "/me",
     requireLogin,
-    userController.deleteMyAccount
+    deleteCurrentUser
 );
 
 module.exports = router;

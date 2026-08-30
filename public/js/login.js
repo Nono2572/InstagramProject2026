@@ -1,43 +1,114 @@
-document.addEventListener("DOMContentLoaded", () => {
+const loginForm = document.getElementById(
+    "login-form"
+);
 
-    redirectLoggedUser();
+const identifierInput = document.getElementById(
+    "login-identifier"
+);
 
-    const loginForm = document.getElementById("login-form");
-    const message = document.getElementById("message");
+const passwordInput = document.getElementById(
+    "login-password"
+);
 
-    loginForm.addEventListener("submit", async (event) => {
+const identifierError = document.getElementById(
+    "identifier-error"
+);
 
+const passwordError = document.getElementById(
+    "password-error"
+);
+
+const serverError = document.getElementById(
+    "login-server-error"
+);
+
+loginForm.addEventListener(
+    "submit",
+
+    async function (event) {
         event.preventDefault();
 
-        message.textContent = "";
+        const identifier =
+            identifierInput.value.trim();
 
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
+        const password =
+            passwordInput.value;
+
+        let formIsValid = true;
+
+        identifierError.textContent = "";
+        passwordError.textContent = "";
+        serverError.textContent = "";
+
+        identifierInput.classList.remove(
+            "input-error"
+        );
+
+        passwordInput.classList.remove(
+            "input-error"
+        );
+
+        if (identifier === "") {
+            identifierError.textContent =
+                "Please enter your username or email.";
+
+            identifierInput.classList.add(
+                "input-error"
+            );
+
+            formIsValid = false;
+        }
+
+        if (password === "") {
+            passwordError.textContent =
+                "Please enter your password.";
+
+            passwordInput.classList.add(
+                "input-error"
+            );
+
+            formIsValid = false;
+        }
+
+        if (!formIsValid) {
+            return;
+        }
 
         try {
+            const response = await fetch(
+                "/api/users/login",
 
-            const data = await apiRequest("/api/users/login", {
-                method: "POST",
-                body: JSON.stringify({
-                    username,
-                    password
-                })
-            });
+                {
+                    method: "POST",
 
-            showMessage(message, data.message, "success");
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            setTimeout(() => {
-                window.location.href = "profile.html";
-            }, 1000);
+                    body: JSON.stringify({
+                        identifier: identifier,
+                        password: password
+                    })
+                }
+            );
 
+            const result =
+                await response.json();
+
+            if (!response.ok) {
+                serverError.textContent =
+                    result.message;
+
+                return;
+            }
+
+            window.location.href =
+                "feed.html";
+
+        } catch (error) {
+            serverError.textContent =
+                "Could not connect to the server.";
         }
-
-        catch (error) {
-
-            showMessage(message, error.message);
-
-        }
-
-    });
-
-});
+    }
+);

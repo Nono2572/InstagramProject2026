@@ -1,57 +1,172 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const path = require('path');
+require("dotenv").config();
 
-const { connectToDatabase } = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
+const express = require("express");
+const session = require("express-session");
+const path = require("path");
+
+const {
+    connectToDatabase
+} = require("./config/db");
+
+const userRoutes = require("./routes/userRoutes");
+
+const {
+    requirePageLogin,
+    redirectIfLoggedIn
+} = require("./middleware/authMiddleware");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(session({
-    secret: 'my-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
+
+app.use(
+    session({
+        secret:
+            process.env.SESSION_SECRET ||
+            "my-secret-key",
+
+        resave: false,
+
+        saveUninitialized: false,
+
+        cookie: {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60,
+            sameSite: "lax"
+        }
+    })
+);
+
+app.get(
+    ["/", "/login.html"],
+    redirectIfLoggedIn,
+
+    function (req, res) {
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "login.html"
+            )
+        );
     }
-}));
+);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.get(
+    "/register.html",
+    redirectIfLoggedIn,
 
-app.use('/api/users', userRoutes);
+    function (req, res) {
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "register.html"
+            )
+        );
+    }
+);
 
-app.get('/', function (req, res) {
-    res.redirect('/login.html');
-});
+app.get(
+    "/feed.html",
+    requirePageLogin,
+
+    function (req, res) {
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "feed.html"
+            )
+        );
+    }
+);
+
+app.get(
+    "/profile.html",
+    requirePageLogin,
+
+    function (req, res) {
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "profile.html"
+            )
+        );
+    }
+);
+
+app.get(
+    "/edit-profile.html",
+    requirePageLogin,
+
+    function (req, res) {
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "edit-profile.html"
+            )
+        );
+    }
+);
+
+app.use(
+    express.static(
+        path.join(
+            __dirname,
+            "public"
+        )
+    )
+);
+
+app.use(
+    "/api/users",
+    userRoutes
+);
 
 app.use(function (req, res) {
     res.status(404).json({
         success: false,
-        message: 'Route not found'
+        message: "Route was not found."
     });
 });
 
-app.use(function (error, req, res, next) {
-    console.log(error);
+app.use(function (
+    error,
+    req,
+    res,
+    next
+) {
+    console.error(error);
 
     res.status(500).json({
         success: false,
-        message: 'Server error'
+        message: "An unexpected server error occurred."
     });
 });
 
-connectToDatabase()
-    .then(function () {
-        app.listen(PORT, function () {
-            console.log(`Server is running at http://localhost:${PORT}`);
-        });
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+async function startServer() {
+    await connectToDatabase();
+
+    app.listen(
+        PORT,
+
+        function () {
+            console.log(
+                "Server is running on http://localhost:" +
+                PORT
+            );
+        }
+    );
+}
+
+startServer();

@@ -1,45 +1,145 @@
-document.addEventListener("DOMContentLoaded", () => {
+const registerForm = document.getElementById(
+    "register-form"
+);
 
-    redirectLoggedUser();
+const fullNameInput = document.getElementById(
+    "register-full-name"
+);
 
-    const registerForm = document.getElementById("register-form");
-    const message = document.getElementById("message");
+const usernameInput = document.getElementById(
+    "register-username"
+);
 
-    registerForm.addEventListener("submit", async (event) => {
+const emailInput = document.getElementById(
+    "register-email"
+);
 
+const passwordInput = document.getElementById(
+    "register-password"
+);
+
+const confirmPasswordInput =
+    document.getElementById(
+        "register-confirm-password"
+    );
+
+const registerError = document.getElementById(
+    "register-error"
+);
+
+registerForm.addEventListener(
+    "submit",
+
+    async function (event) {
         event.preventDefault();
 
-        message.textContent = "";
+        const fullName =
+            fullNameInput.value.trim();
 
-        const username = document.getElementById("username").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
+        const username =
+            usernameInput.value.trim();
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+        registerError.textContent = "";
+
+        if (
+            username === "" ||
+            email === "" ||
+            password === ""
+        ) {
+            registerError.textContent =
+                "Username, email and password are required.";
+
+            return;
+        }
+
+        if (!isValidUsername(username)) {
+            registerError.textContent =
+                "Username must contain 3-20 letters, numbers, dots or underscores.";
+
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            registerError.textContent =
+                "Please enter a valid email address.";
+
+            return;
+        }
+
+        if (password.length < 6) {
+            registerError.textContent =
+                "Password must contain at least 6 characters.";
+
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            registerError.textContent =
+                "The passwords do not match.";
+
+            return;
+        }
 
         try {
+            const response = await fetch(
+                "/api/users/register",
 
-            const data = await apiRequest("/api/users/register", {
-                method: "POST",
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            });
+                {
+                    method: "POST",
 
-            showMessage(message, data.message, "success");
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 1500);
+                    body: JSON.stringify({
+                        fullName: fullName,
+                        username: username,
+                        email: email,
+                        password: password
+                    })
+                }
+            );
 
+            const result =
+                await response.json();
+
+            if (!response.ok) {
+                registerError.textContent =
+                    result.message;
+
+                return;
+            }
+
+            window.location.href =
+                "feed.html";
+
+        } catch (error) {
+            registerError.textContent =
+                "Could not connect to the server.";
         }
+    }
+);
 
-        catch (error) {
+function isValidEmail(value) {
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            showMessage(message, error.message);
+    return emailPattern.test(value);
+}
 
-        }
+function isValidUsername(value) {
+    const usernamePattern =
+        /^[a-zA-Z0-9._]{3,20}$/;
 
-    });
-
-});
+    return usernamePattern.test(value);
+}

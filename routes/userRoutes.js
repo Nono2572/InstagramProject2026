@@ -6,7 +6,9 @@ const {
     logoutUser,
     getCurrentUser,
     updateCurrentUser,
-    deleteCurrentUser
+    deleteCurrentUser,
+    getAllUsers,
+    searchUsers
 } = require("../controllers/userController");
 
 const {
@@ -14,6 +16,18 @@ const {
 } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+router.get(
+    "/",
+    requireLogin,
+    getAllUsers
+);
+
+router.get(
+    "/search",
+    requireLogin,
+    searchUsers
+);
 
 router.post(
     "/register",
@@ -48,5 +62,6 @@ router.delete(
     requireLogin,
     deleteCurrentUser
 );
+
 
 module.exports = router;

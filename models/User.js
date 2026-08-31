@@ -77,7 +77,21 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
             default: "images/BlankProfile.jpg"
+        },
+
+        friends: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }
+    ],
+
+        friendRequests: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ]
     },
     {
         timestamps: true

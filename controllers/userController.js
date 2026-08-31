@@ -97,8 +97,8 @@ async function registerUser(req, res) {
 
 async function loginUser(req, res) {
     try {
-        const identifier = String(
-            req.body.identifier || ""
+        const username = String(
+            req.body.username || ""
         )
             .trim()
             .toLowerCase();
@@ -108,30 +108,23 @@ async function loginUser(req, res) {
         );
 
         if (
-            identifier === "" ||
+            username === "" ||
             password === ""
         ) {
             return res.status(400).json({
                 success: false,
-                message: "Username/email and password are required."
+                message: "Username and password are required."
             });
         }
 
         const user = await User.findOne({
-            $or: [
-                {
-                    username: identifier
-                },
-                {
-                    email: identifier
-                }
-            ]
+            username: username
         }).select("+password");
 
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: "Incorrect username/email or password."
+                message: "Incorrect username or password."
             });
         }
 
@@ -320,11 +313,81 @@ async function deleteCurrentUser(req, res) {
     }
 }
 
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find()
+            .select(
+                "username fullName bio profileImage"
+            )
+            .sort({
+                username: 1
+            });
+
+        return res.status(200).json({
+            success: true,
+            users: users
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Could not load users."
+        });
+    }
+    
+}
+
+async function searchUsers(req, res) {
+    try {
+        const username = String(
+            req.query.username || ""
+        ).trim();
+
+        const fullName = String(
+            req.query.fullName || ""
+        ).trim();
+
+        const query = {};
+
+        if (username !== "") {
+            query.username = {
+                $regex: username,
+                $options: "i"
+            };
+        }
+
+        if (fullName !== "") {
+            query.fullName = {
+                $regex: fullName,
+                $options: "i"
+            };
+        }
+
+        const users = await User.find(query)
+            .select(
+                "username fullName bio profileImage"
+            );
+
+        return res.status(200).json({
+            success: true,
+            users: users
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Could not search users."
+        });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     logoutUser,
     getCurrentUser,
     updateCurrentUser,
-    deleteCurrentUser
+    deleteCurrentUser,
+    getAllUsers,
+    searchUsers
 };

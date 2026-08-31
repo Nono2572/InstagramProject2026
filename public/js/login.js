@@ -2,16 +2,16 @@ const loginForm = document.getElementById(
     "login-form"
 );
 
-const identifierInput = document.getElementById(
-    "login-identifier"
+const usernameInput = document.getElementById(
+    "login-username"
 );
 
 const passwordInput = document.getElementById(
     "login-password"
 );
 
-const identifierError = document.getElementById(
-    "identifier-error"
+const usernameError = document.getElementById(
+    "username-error"
 );
 
 const passwordError = document.getElementById(
@@ -28,8 +28,8 @@ loginForm.addEventListener(
     async function (event) {
         event.preventDefault();
 
-        const identifier =
-            identifierInput.value.trim();
+        const username =
+            usernameInput.value.trim();
 
         const password =
             passwordInput.value;
@@ -48,11 +48,11 @@ loginForm.addEventListener(
             "input-error"
         );
 
-        if (identifier === "") {
-            identifierError.textContent =
-                "Please enter your username or email.";
+        if (username === "") {
+            usernameError.textContent =
+                "Please enter your username.";
 
-            identifierInput.classList.add(
+            usernameInput.classList.add(
                 "input-error"
             );
 
@@ -87,7 +87,7 @@ loginForm.addEventListener(
                     },
 
                     body: JSON.stringify({
-                        identifier: identifier,
+                        username: username,
                         password: password
                     })
                 }

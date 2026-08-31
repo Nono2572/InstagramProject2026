@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Groups</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+</head>
+
+<body>
+
+    <header>
+        <h1>Groups</h1>
+    </header>
+
+
+    <main>
+        <section class="create-group-section">
+
+            <h2>Create Group</h2>
+
+            <form id="create-group-form">
+
+                <label for="create-group-name">
+                    Group name
+                </label>
+
+                <input
+                    type="text"
+                    id="create-group-name"
+                    maxlength="50"
+                    required
+                >
+
+
+                <label for="create-group-description">
+                    Description
+                </label>
+
+                <textarea
+                    id="create-group-description"
+                    maxlength="300"
+                    rows="4"
+                ></textarea>
+
+
+                <label for="create-group-category">
+                    Category
+                </label>
+
+                <input
+                    type="text"
+                    id="create-group-category"
+                    required
+                >
+
+
+                <label for="create-group-location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="create-group-location"
+                >
+
+
+                <p id="create-group-error"></p>
+
+
+                <button type="submit">
+                    Create Group
+                </button>
+
+            </form>
+
+        </section>
+
+        
+        <section class="group-search-section">
+
+            <h2>Search Groups</h2>
+
+            <form id="group-search-form">
+
+                <input
+                    type="text"
+                    id="search-name"
+                    placeholder="Group name"
+                >
+
+                <input
+                    type="text"
+                    id="search-category"
+                    placeholder="Category"
+                >
+
+                <input
+                    type="text"
+                    id="search-location"
+                    placeholder="Location"
+                >
+
+                <button type="submit">
+                    Search
+                </button>
+
+                <button
+                    type="button"
+                    id="show-all-groups"
+                >
+                    Show All
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section>
+
+            <h2>Groups</h2>
+
+            <p id="groups-error"></p>
+
+            <div id="groups-list"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/groups.js"></script>
+
+</body>
+
+</html>

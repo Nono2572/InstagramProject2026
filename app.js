@@ -9,6 +9,7 @@ const {
 } = require("./config/db");
 
 const userRoutes = require("./routes/userRoutes");
+const groupRoutes = require("./routes/groupRoutes");
 
 const {
     requirePageLogin,
@@ -131,6 +132,11 @@ app.use(
 app.use(
     "/api/users",
     userRoutes
+);
+
+app.use(
+    "/api/groups",
+    groupRoutes
 );
 
 app.use(function (req, res) {

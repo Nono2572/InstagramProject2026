@@ -18,7 +18,7 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const postRoutes = require("./routes/PostRoutes");
 app.use(express.json());
 
 app.use(
@@ -133,7 +133,10 @@ app.use(
     "/api/users",
     userRoutes
 );
-
+app.use(
+    "/api/posts",
+    postRoutes
+);
 app.use(
     "/api/groups",
     groupRoutes

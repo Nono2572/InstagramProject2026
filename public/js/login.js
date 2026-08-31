@@ -22,6 +22,7 @@ const serverError = document.getElementById(
     "login-server-error"
 );
 
+
 loginForm.addEventListener(
     "submit",
 
@@ -36,11 +37,13 @@ loginForm.addEventListener(
 
         let formIsValid = true;
 
-        identifierError.textContent = "";
+
+        // Clear previous errors
+        usernameError.textContent = "";
         passwordError.textContent = "";
         serverError.textContent = "";
 
-        identifierInput.classList.remove(
+        usernameInput.classList.remove(
             "input-error"
         );
 
@@ -48,6 +51,8 @@ loginForm.addEventListener(
             "input-error"
         );
 
+
+        // Validate username
         if (username === "") {
             usernameError.textContent =
                 "Please enter your username.";
@@ -59,6 +64,8 @@ loginForm.addEventListener(
             formIsValid = false;
         }
 
+
+        // Validate password
         if (password === "") {
             passwordError.textContent =
                 "Please enter your password.";
@@ -70,14 +77,15 @@ loginForm.addEventListener(
             formIsValid = false;
         }
 
+
         if (!formIsValid) {
             return;
         }
 
+
         try {
             const response = await fetch(
                 "/api/users/login",
-
                 {
                     method: "POST",
 
@@ -93,8 +101,10 @@ loginForm.addEventListener(
                 }
             );
 
+
             const result =
                 await response.json();
+
 
             if (!response.ok) {
                 serverError.textContent =
@@ -103,10 +113,13 @@ loginForm.addEventListener(
                 return;
             }
 
+
             window.location.href =
-                "feed.html";
+                "/feed.html";
 
         } catch (error) {
+            console.error(error);
+
             serverError.textContent =
                 "Could not connect to the server.";
         }

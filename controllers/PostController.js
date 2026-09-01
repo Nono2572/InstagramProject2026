@@ -1,6 +1,37 @@
 const mongoose = require("mongoose");
 const Post = require("../models/Post");
+const Group = require("../models/Group");
+const {publishPostToFacebookPage} = require("../services/facebookService");
+function sameId(firstId, secondId) {
+    if (!firstId || !secondId) {
+        return false;
+    }
 
+    return firstId.toString() === secondId.toString();
+}
+
+
+function listContainsUserId(list, userId) {
+    if (!Array.isArray(list)) {
+        return false;
+    }
+
+    return list.some(function (item) {
+        if (!item) {
+            return false;
+        }
+
+        if (item._id) {
+            return sameId(item._id, userId);
+        }
+
+        if (item.user) {
+            return sameId(item.user, userId);
+        }
+
+        return sameId(item, userId);
+    });
+}
 exports.getPosts = async function (req, res) {
     try {
         const searchText = req.query.search || "";
@@ -112,6 +143,45 @@ exports.createPost = async function (req, res) {
         }
 
         const userId = req.session.userId || (req.session.user && req.session.user._id);
+        if (!userId) {
+    return res.status(401).json({
+        success: false,
+        message: "You must be logged in to create a post."
+    });
+}
+
+if (groupId !== "") {
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid group selected."
+        });
+    }
+
+    const selectedGroup = await Group.findById(groupId);
+
+    if (!selectedGroup) {
+        return res.status(404).json({
+            success: false,
+            message: "Group was not found."
+        });
+    }
+
+    const userIsInGroup =
+        listContainsUserId(selectedGroup.members, userId) ||
+        listContainsUserId(selectedGroup.users, userId) ||
+        listContainsUserId(selectedGroup.admins, userId) ||
+        sameId(selectedGroup.owner, userId) ||
+        sameId(selectedGroup.creator, userId) ||
+        sameId(selectedGroup.createdBy, userId);
+
+    if (!userIsInGroup) {
+        return res.status(403).json({
+            success: false,
+            message: "You can only post in groups you are a member of."
+        });
+    }
+}
 
         if (groupId !== "" && !mongoose.Types.ObjectId.isValid(groupId)) {
     return res.status(400).json({
@@ -129,13 +199,18 @@ exports.createPost = async function (req, res) {
             group: groupId || null
         });
 
-        const populatedPost = await Post.findById(newPost._id)
+    const populatedPost = await Post.findById(newPost._id)
     .populate("author", "username fullName profileImage")
-    .populate("group", "name");
+    .populate("group", "name")
+    .populate("comments.author", "username fullName profileImage");
+
+        const facebookResult =
+            await publishPostToFacebookPage(populatedPost);
 
         res.status(201).json({
             success: true,
-            post: populatedPost
+            post: populatedPost,
+            facebook: facebookResult
         });
     } catch (error) {
         res.status(500).json({

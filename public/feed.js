@@ -11,7 +11,6 @@ const mediaInput = document.getElementById("post-media");
 const captionInput = document.getElementById("post-caption");
 const locationInput = document.getElementById("post-location");
 const postGroupInput = document.getElementById("post-group");
-const groupId = postGroupInput.value;
 
 const errorMessage = document.getElementById("create-post-error");
 const successMessage = document.getElementById("new-post-message");
@@ -20,7 +19,6 @@ const noPostsMessage = document.getElementById("no-posts-message");
 
 const instagramLogoLink = document.getElementById("instagram-logo-link");
 const homeButton = document.getElementById("home-button");
-const reelsButton = document.getElementById("reels-button");
 
 const openSearchPanel = document.getElementById("open-search-panel");
 const closeSearchPanel = document.getElementById("close-search-panel");
@@ -893,12 +891,33 @@ if (
 
 
 const locationText = document.createElement("p");
-locationText.textContent = postData.location || "";
+
+const locationParts = [];
+
+if (
+    postData.location &&
+    postData.location.trim() !== ""
+) {
+    locationParts.push(postData.location);
+}
+
+if (
+    postData.group &&
+    postData.group.name
+) {
+    locationParts.push(postData.group.name);
+}
+
+locationText.textContent =
+    locationParts.join(" • ");
 
 headerText.append(
-    userLine,
-    locationText
+    userLine
 );
+
+if (locationParts.length > 0) {
+    headerText.appendChild(locationText);
+}
 
 header.append(
     profileImage,
@@ -1309,28 +1328,6 @@ function filterPosts() {
 }
 
 
-if (reelsButton) {
-    reelsButton.addEventListener("click", function (event) {
-        event.preventDefault();
-
-        appliedSearchText = "";
-        appliedPostType = "video";
-        appliedGroupId = "all";
-
-        postSearchInput.value = "";
-        postTypeFilter.value = "video";
-        postGroupFilter.value = "all";
-
-        filterPosts();
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    });
-}
-
-
 /* =========================================================
    COMMENTS
    ========================================================= */
@@ -1481,13 +1478,14 @@ function addCommentSectionToPost(post, savedComments) {
         initialCommentsCount;
 
     post.commentsListData =
-        savedComments;
+    savedComments;
 
-    const commentsFeature =
+const commentsFeature =
     document.createElement("div");
-    commentsFeature.classList.add(
-        "comments-feature"
-    );
+
+commentsFeature.classList.add(
+    "comments-feature"
+);
 
 
     const commentsCounter =
@@ -1788,19 +1786,6 @@ function closeCommentsWindow() {
 
     activeCommentsPost = null;
 }
-
-
-
-/* Add comments functionality to existing posts */
-
-postsContainer
-    .querySelectorAll(
-        ".instagram-post"
-    )
-    .forEach(function (post) {
-        addCommentSectionToPost(post);
-    });
-
 
 /* Open comments */
 
@@ -2601,6 +2586,7 @@ async function loadCurrentUserForFeed() {
             currentUserId
         );
 
+        loadGroupsForCreatePost();
 
         await loadFriendshipData();
 
@@ -2650,6 +2636,48 @@ function loadSavedPosts() {
         });
 }
 
+function idsAreSame(firstId, secondId) {
+    if (!firstId || !secondId) {
+        return false;
+    }
+
+    if (firstId._id) {
+        firstId = firstId._id;
+    }
+
+    if (firstId.user) {
+        firstId = firstId.user;
+    }
+
+    if (secondId._id) {
+        secondId = secondId._id;
+    }
+
+    return String(firstId) === String(secondId);
+}
+
+
+function idListContainsUser(list, userId) {
+    if (!Array.isArray(list)) {
+        return false;
+    }
+
+    return list.some(function (item) {
+        return idsAreSame(item, userId);
+    });
+}
+
+
+function currentUserCanPostInGroup(group) {
+    return (
+        idListContainsUser(group.members, currentUserId) ||
+        idListContainsUser(group.users, currentUserId) ||
+        idListContainsUser(group.admins, currentUserId) ||
+        idsAreSame(group.owner, currentUserId) ||
+        idsAreSame(group.creator, currentUserId) ||
+        idsAreSame(group.createdBy, currentUserId)
+    );
+}
 
 function loadGroupsForCreatePost() {
     fetch("/api/groups")
@@ -2700,28 +2728,30 @@ function loadGroupsForCreatePost() {
             postGroupFilter.appendChild(noGroupSearchOption);
 
 
-            /*
-                Add real MongoDB groups to both dropdowns
-            */
+            /* Add real MongoDB groups to both dropdowns */
 
             data.groups.forEach(function (group) {
-                const createOption =
-                    document.createElement("option");
+            const searchOption =
+                document.createElement("option");
 
-                createOption.value = group._id;
-                createOption.textContent = group.name;
+            searchOption.value = group._id;
+            searchOption.textContent = group.name;
 
-                postGroupInput.appendChild(createOption);
+            postGroupFilter.appendChild(searchOption);
 
+            /* Create-post dropdown: show ONLY groups the current user can post in. */
+            if (!currentUserCanPostInGroup(group)) {
+                return;
+            }
 
-                const searchOption =
-                    document.createElement("option");
+            const createOption =
+                document.createElement("option");
 
-                searchOption.value = group._id;
-                searchOption.textContent = group.name;
+            createOption.value = group._id;
+            createOption.textContent = group.name;
 
-                postGroupFilter.appendChild(searchOption);
-            });
+            postGroupInput.appendChild(createOption);
+        });
         })
         .catch(function (error) {
             console.log("Could not load groups:", error);
@@ -2779,5 +2809,4 @@ async function initializeFeedFriendButtons() {
 
 initializeFeedFriendButtons();
 
-loadGroupsForCreatePost();
 loadCurrentUserForFeed();

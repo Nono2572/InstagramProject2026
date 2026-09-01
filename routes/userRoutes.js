@@ -8,7 +8,15 @@ const {
     updateCurrentUser,
     deleteCurrentUser,
     getAllUsers,
-    searchUsers
+    searchUsers,
+    getFriends,
+    getFriendRequests,
+    getSentFriendRequests,
+    sendFriendRequest,
+    cancelFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
+    removeFriend
 } = require("../controllers/userController");
 
 const {
@@ -61,6 +69,55 @@ router.delete(
     "/me",
     requireLogin,
     deleteCurrentUser
+);
+
+
+router.get(
+    "/friends",
+    requireLogin,
+    getFriends
+);
+
+router.get(
+    "/friend-requests",
+    requireLogin,
+    getFriendRequests
+);
+
+router.get(
+    "/sent-friend-requests",
+    requireLogin,
+    getSentFriendRequests
+);
+
+router.post(
+    "/:userId/friend-request",
+    requireLogin,
+    sendFriendRequest
+);
+
+router.delete(
+    "/:userId/friend-request",
+    requireLogin,
+    cancelFriendRequest
+);
+
+router.post(
+    "/friend-requests/:userId/accept",
+    requireLogin,
+    acceptFriendRequest
+);
+
+router.delete(
+    "/friend-requests/:userId",
+    requireLogin,
+    rejectFriendRequest
+);
+
+router.delete(
+    "/friends/:userId",
+    requireLogin,
+    removeFriend
 );
 
 

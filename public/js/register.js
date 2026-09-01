@@ -33,6 +33,9 @@ registerForm.addEventListener(
     async function (event) {
         event.preventDefault();
 
+        const fullName =
+            fullNameInput.value.trim();
+
         const username =
             usernameInput.value.trim();
 
@@ -53,7 +56,7 @@ registerForm.addEventListener(
             password === ""
         ) {
             registerError.textContent =
-                "Username and password are required.";
+                "Username, email and password are required.";
 
             return;
         }
@@ -99,6 +102,7 @@ registerForm.addEventListener(
                     },
 
                     body: JSON.stringify({
+                        fullName: fullName,
                         username: username,
                         email: email,
                         password: password

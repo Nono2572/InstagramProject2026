@@ -36,6 +36,10 @@ let appliedPostType = "all";
 let appliedGroupId = "all";
 let currentUserId = "";
 
+let friendIds = new Set();
+let incomingFriendRequestIds = new Set();
+let sentFriendRequestIds = new Set();
+
 /* =========================================================
    HOME / INSTAGRAM LOGO
    ========================================================= */
@@ -458,6 +462,363 @@ function createPostElement(postType, caption, selectedFile, location, groupId) {
     return post;
 }
 
+async function loadFriendshipData() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/users/friends"),
+            fetch("/api/users/friend-requests"),
+            fetch("/api/users/sent-friend-requests")
+        ]);
+
+        const friendsData = await responses[0].json();
+        const incomingData = await responses[1].json();
+        const sentData = await responses[2].json();
+
+        friendIds.clear();
+        incomingFriendRequestIds.clear();
+        sentFriendRequestIds.clear();
+
+        if (friendsData.success) {
+            friendsData.friends.forEach(function (user) {
+                friendIds.add(
+                    String(user._id || user.id)
+                );
+            });
+        }
+
+        if (incomingData.success) {
+            incomingData.friendRequests.forEach(function (user) {
+                incomingFriendRequestIds.add(
+                    String(user._id || user.id)
+                );
+            });
+        }
+
+        if (sentData.success) {
+            sentData.sentFriendRequests.forEach(function (user) {
+                sentFriendRequestIds.add(
+                    String(user._id || user.id)
+                );
+            });
+        }
+
+    } catch (error) {
+        console.log(
+            "Could not load friendship information:",
+            error
+        );
+    }
+}
+
+
+function getFriendshipStatus(userId) {
+    userId = String(userId);
+
+    if (friendIds.has(userId)) {
+        return "friends";
+    }
+
+    if (incomingFriendRequestIds.has(userId)) {
+        return "incoming";
+    }
+
+    if (sentFriendRequestIds.has(userId)) {
+        return "requested";
+    }
+
+    return "none";
+}
+
+
+function updateFriendButton(button) {
+    const userId = button.dataset.userId;
+
+    const status =
+        getFriendshipStatus(userId);
+
+    if (status === "friends") {
+        button.textContent = "Friends";
+    }
+
+    else if (status === "incoming") {
+        button.textContent = "Accept";
+    }
+
+    else if (status === "requested") {
+        button.textContent = "Requested";
+    }
+
+    else {
+        button.textContent = "Add friend";
+    }
+
+    button.disabled = false;
+}
+
+
+async function changeFriendship(button) {
+
+    const userId =
+        button.dataset.userId;
+
+    const status =
+        getFriendshipStatus(userId);
+
+
+    let url = "";
+    let method = "";
+
+
+    /* -------------------------
+       NOT FRIENDS
+       Send request
+       ------------------------- */
+
+    if (status === "none") {
+
+        url =
+            "/api/users/" +
+            userId +
+            "/friend-request";
+
+        method = "POST";
+    }
+
+
+    /* -------------------------
+       REQUEST ALREADY SENT
+       Cancel it
+       ------------------------- */
+
+    else if (status === "requested") {
+
+        url =
+            "/api/users/" +
+            userId +
+            "/friend-request";
+
+        method = "DELETE";
+    }
+
+
+    /* -------------------------
+       THEY SENT US A REQUEST
+       Accept it
+       ------------------------- */
+
+    else if (status === "incoming") {
+
+        url =
+            "/api/users/friend-requests/" +
+            userId +
+            "/accept";
+
+        method = "POST";
+    }
+
+
+    /* -------------------------
+       ALREADY FRIENDS
+       Remove friendship
+       ------------------------- */
+
+    else if (status === "friends") {
+
+        const removeFriend =
+            confirm(
+                "Remove this user from your friends?"
+            );
+
+
+        if (!removeFriend) {
+            return;
+        }
+
+
+        url =
+            "/api/users/friends/" +
+            userId;
+
+        method = "DELETE";
+    }
+
+
+    button.disabled = true;
+    button.textContent = "...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: method
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(
+                data.message ||
+                "Could not change friendship."
+            );
+
+            updateFriendButton(
+                button
+            );
+
+            button.disabled = false;
+
+            return;
+        }
+
+
+        /*
+            IMPORTANT:
+
+            The database has changed.
+
+            Instead of guessing what
+            the new state is, load the
+            real state again from MongoDB.
+        */
+
+        await loadFriendshipData();
+
+
+        /*
+            Update EVERY button belonging
+            to users in the feed.
+        */
+
+        const buttons =
+            document.querySelectorAll(
+                ".feed-friend-button"
+            );
+
+
+        buttons.forEach(
+            function (currentButton) {
+
+                updateFriendButton(
+                    currentButton
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.log(
+            "Friendship request failed:",
+            error
+        );
+
+        alert(
+            "Could not connect to the server."
+        );
+
+        updateFriendButton(
+            button
+        );
+    }
+
+
+    button.disabled = false;
+}
+
+
+async function loadFriendshipData() {
+    try {
+        const friendsResponse =
+            await fetch("/api/users/friends");
+
+        const incomingResponse =
+            await fetch("/api/users/friend-requests");
+
+        const sentResponse =
+            await fetch("/api/users/sent-friend-requests");
+
+
+        const friendsData =
+            await friendsResponse.json();
+
+        const incomingData =
+            await incomingResponse.json();
+
+        const sentData =
+            await sentResponse.json();
+
+
+        friendIds.clear();
+        incomingFriendRequestIds.clear();
+        sentFriendRequestIds.clear();
+
+
+        if (friendsData.success) {
+
+            friendsData.friends.forEach(function (user) {
+
+                friendIds.add(
+                    String(user._id || user.id)
+                );
+
+            });
+        }
+
+
+        if (incomingData.success) {
+
+            incomingData.friendRequests.forEach(function (user) {
+
+                incomingFriendRequestIds.add(
+                    String(user._id || user.id)
+                );
+
+            });
+        }
+
+
+        if (sentData.success) {
+
+            sentData.sentFriendRequests.forEach(function (user) {
+
+                sentFriendRequestIds.add(
+                    String(user._id || user.id)
+                );
+
+            });
+        }
+
+
+        console.log("Friends:", friendIds);
+        console.log(
+            "Incoming requests:",
+            incomingFriendRequestIds
+        );
+        console.log(
+            "Sent requests:",
+            sentFriendRequestIds
+        );
+
+
+    } catch (error) {
+
+        console.log(
+            "Could not load friendship data:",
+            error
+        );
+    }
+}
+
+
 function createPostElementFromDatabase(postData) {
     const post = document.createElement("div");
 
@@ -487,20 +848,16 @@ if (postData.author && postData.author.profileImage) {
     const headerText = document.createElement("div");
     headerText.classList.add("post-user-info");
 
-    const username = document.createElement("strong");
+const userLine = document.createElement("div");
+userLine.classList.add("post-user-line");
 
-    if (postData.author && postData.author.username) {
-        username.textContent = postData.author.username;
-    } else {
-        username.textContent = "college_user";
-    }
+const username = document.createElement("strong");
 
-    const locationText = document.createElement("p");
-    locationText.textContent = postData.location || "";
-
-    headerText.append(username, locationText);
-
-header.append(profileImage, headerText);
+if (postData.author && postData.author.username) {
+    username.textContent = postData.author.username;
+} else {
+    username.textContent = "college_user";
+}
 
 const authorId =
     postData.author && postData.author._id
@@ -508,6 +865,45 @@ const authorId =
         : postData.author && postData.author.id
             ? postData.author.id
             : postData.author || "";
+
+userLine.appendChild(username);
+
+
+/* Add friendship button only for other users */
+if (
+    authorId &&
+    authorId.toString() !== currentUserId.toString()
+) {
+    const friendButton = document.createElement("button");
+
+    friendButton.type = "button";
+    friendButton.classList.add("feed-friend-button");
+
+    friendButton.dataset.userId =
+        authorId.toString();
+
+    updateFriendButton(friendButton);
+
+    friendButton.addEventListener("click", function () {
+        changeFriendship(friendButton);
+    });
+
+    userLine.appendChild(friendButton);
+}
+
+
+const locationText = document.createElement("p");
+locationText.textContent = postData.location || "";
+
+headerText.append(
+    userLine,
+    locationText
+);
+
+header.append(
+    profileImage,
+    headerText
+);
 
 console.log("Post author id:", authorId);
 console.log("Current user id:", currentUserId);
@@ -589,28 +985,6 @@ post.appendChild(header);
     return post;
 }
 
-function loadCurrentUserForFeed() {
-    fetch("/api/users/me")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.success && data.user) {
-                currentUserId =
-                    data.user._id ||
-                    data.user.id ||
-                    "";
-            }
-
-            console.log("Current user id:", currentUserId);
-
-            loadSavedPosts();
-        })
-        .catch(function (error) {
-            console.log("Could not load current user:", error);
-            loadSavedPosts();
-        });
-}
 
 function loadSavedPosts() {
     fetch("/api/posts")
@@ -1703,27 +2077,56 @@ function loadSavedPosts() {
         });
 }
 
-function loadCurrentUserForFeed() {
-    fetch("/api/users/me")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.success && data.user) {
-                currentUserId =
+async function loadCurrentUserForFeed() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/users/me"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success &&
+            data.user
+        ) {
+
+            currentUserId =
+                String(
                     data.user._id ||
                     data.user.id ||
-                    "";
-            }
+                    ""
+                );
+        }
 
-            loadSavedPosts();
-        })
-        .catch(function (error) {
-            console.log("Could not load current user:", error);
-            loadSavedPosts();
-        });
+
+        console.log(
+            "Current user id:",
+            currentUserId
+        );
+
+
+        await loadFriendshipData();
+
+        loadSavedPosts();
+
+
+    } catch (error) {
+
+        console.log(
+            "Could not load current user:",
+            error
+        );
+
+
+        loadSavedPosts();
+    }
 }
-
 
 function loadSavedPosts() {
     fetch("/api/posts")
@@ -1834,6 +2237,56 @@ function loadGroupsForCreatePost() {
         });
 }
 
+/* =========================================================
+   FRIENDSHIP STATUS BUTTONS IN THE MAIN FEED
+   ========================================================= */
+
+const feedFriendshipState = {
+    currentUserId: "",
+    usersByUsername: new Map(),
+    friendIds: new Set(),
+    incomingRequestIds: new Set(),
+    sentRequestIds: new Set()
+};
+
+/*
+    all the other feed friendship functions
+    that are currently in friends.js
+*/
+
+async function initializeFeedFriendButtons() {
+    try {
+        await loadFeedFriendshipData();
+
+        addFriendButtonsToFeed();
+
+        const postsContainer =
+            document.getElementById("posts-container");
+
+        if (!postsContainer) {
+            return;
+        }
+
+        const observer =
+            new MutationObserver(function () {
+                addFriendButtonsToFeed();
+            });
+
+        observer.observe(postsContainer, {
+            childList: true,
+            subtree: true
+        });
+
+    } catch (error) {
+        console.log(
+            "Could not initialize feed friendship buttons:",
+            error
+        );
+    }
+}
+
+
+initializeFeedFriendButtons();
 
 loadGroupsForCreatePost();
 loadCurrentUserForFeed();

@@ -1,7 +1,12 @@
 html,
 body{
-    height: 100%;
     margin: 0;
+    min-height: 100%;
+}
+
+body {
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .instagram-login-page{
@@ -218,36 +223,52 @@ body{
    ========================================================= */
 
 .instagram-logo-link {
-    display: block;
-    margin-bottom: 33px;
-    padding-left: 12px;
+    position: absolute;
+    top: 25px;
+    left: 30px;
 }
 
 .instagram-sidebar-logo {
-    width: 21px;
-    height: 21px;
+    width: 28px;
+    height: 28px;
     filter: grayscale(100%) contrast(200%);
 }
 
 .feed-page-wrapper {
     min-height: 100vh;
-    display: block;
+        width: 100%;
 }
+
 
 .feed-layout {
     display: flex;
     align-items: flex-start;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
 }
 
 .feed-sidebar {
-    min-height: 100vh;
-    width: 90px;
-    padding: 25px 15px;
-    position: sticky;
+    position: fixed;
     top: 0;
-    transition: width 0.3s;
-    overflow: hidden;
+    left: 0;
+
+    width: 220px;
+    height: 100vh;
+
+    padding: 20px;
+
+    border-right: 1px solid #dbdbdb;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: white;
+
+    z-index: 100;
 }
+
 
 .instagram-title {
     font-size: 30px;
@@ -256,26 +277,28 @@ body{
 }
 
 .sidebar-menu {
-    margin-top: 235px;
+    width: 100%;
 }
 
 .sidebar-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    width: 100%;
+    gap: 16px;
+    padding: 12px 10px;
+    margin-bottom: 8px;
     color: black;
     text-decoration: none;
     font-size: 16px;
-    padding: 8px 10px;
     border-radius: 10px;
-    margin-bottom: 3px;
-    width: fit-content;
 }
 
+
 .sidebar-item i {
-    width: 29px;
-    font-size: 26px;
+    width: 30px;
+    font-size: 27px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .sidebar-item:hover{
@@ -283,7 +306,7 @@ body{
 }
 
 .sidebar-item span {
-    display: none;
+    display: inline;
 }
 
 .feed-sidebar:hover .sidebar-item span {
@@ -298,38 +321,68 @@ body{
 }
 
 .logout-button {
-    display: block;
-    margin-top: 45px;
+    position: absolute;
+    bottom: 35px;
+    left: 30px;
     color: #0866e8;
     text-decoration: none;
-    font-size: 18px;
     font-weight: bold;
 }
 
+
+
+.feed-center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: 45px;
+
+    width: 100%;
+
+    padding-top: 20px;
+}
+
+.feed-content-area {
+    margin-left: 220px;
+
+    width: calc(100% - 220px);
+
+    min-height: 100vh;
+}
+
 .main-feed {
-    max-width: 330px;
-    margin: 0 auto;
-    padding-top: 10px;
+    width: 600px;
+
+    flex-shrink: 0;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: visible;
 }
 
 .stories-box {
     display: flex;
-    justify-content: center;
-    gap: 18px;
-    border: none;
-    padding: 10px 0;
-    margin-bottom: 25px;
-    overflow: visible;
-}
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 0 25px 0;
+    margin-bottom: 10px;
+    overflow: hidden;}
 
 .story {
+    width: 80px;
+    flex-shrink: 0;
     text-align: center;
     font-size: 12px;
 }
 
 .story img {
-    width: 82px;
-    height: 82px;
+    width: 66px;
+    height: 66px;
+    object-fit: cover;
     border-radius: 50%;
     border: 3px solid #e1306c;
     padding: 2px;
@@ -338,11 +391,15 @@ body{
 .story p {
     margin-top: 5px;
     margin-bottom: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .instagram-post {
-    width: 60%;
-    margin: 0 auto 35px auto;
+    width: 100%;
+    margin: 0 0 35px 0;
     padding-bottom: 25px;
     border-bottom: 1px solid #dbdbdb;
 }
@@ -355,8 +412,9 @@ body{
 }
 
 .post-header img {
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
     border-radius: 50%;
 }
 
@@ -369,14 +427,16 @@ body{
 .post-image {
     display: block;
     width: 100%;
-    max-height: 560px;
+    max-height: 650px;
     object-fit: cover;
     border-radius: 4px;
 }
 
 .post-actions {
+    display: flex;
+    align-items: center;
     font-size: 28px;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .post-actions span {
@@ -384,8 +444,9 @@ body{
 }
 
 .save-icon {
-    float: right;
-    margin-right: 0;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    float: none;
 }
 
 .likes {
@@ -426,11 +487,17 @@ body{
 }
 
 .suggestions-area {
-    max-width: 360px;
-    padding-top: 35px;
-    padding-left: 25px;
-    position: relative;
-    left: -180px;
+    width: 300px;
+
+    flex-shrink: 0;
+
+    position: sticky;
+    top: 20px;
+
+    height: fit-content;
+
+    margin: 0;
+    padding: 0;
 }
 
 .suggestions-title {
@@ -482,6 +549,7 @@ body{
 .suggestion-info img {
     width: 36px;
     height: 36px;
+    object-fit: cover;
     border-radius: 50%;
 }
 
@@ -949,7 +1017,7 @@ body{
 
 
 /* =========================================================
-   SECTION 1 - LIKE
+   LIKE
    ========================================================= */
 
 .like-button,
@@ -987,7 +1055,7 @@ body{
 
 
 /* =========================================================
-   SECTION 4 - DARK MODE
+    DARK MODE
    ========================================================= */
 
 .dark-mode {
@@ -1041,7 +1109,7 @@ body{
 
 
 /* =========================================================
-   SECTION 5 - BACK TO TOP
+   BACK TO TOP
    ========================================================= */
 
 .back-to-top-button {
@@ -1067,7 +1135,7 @@ body{
 
 
 /* =========================================================
-   SECTION 10 - SHARE POPUP
+    SHARE POPUP
    ========================================================= */
 
 .share-overlay {
@@ -1142,7 +1210,6 @@ body{
 
 
 /* =========================================================
-   FINAL PROJECT - USER PAGES
    REGISTER / PROFILE / EDIT PROFILE
    ========================================================= */
 
@@ -1455,4 +1522,172 @@ body{
         width: 120px;
         height: 120px;
     }
+}
+
+/* =========================================================
+   FRIENDS STYLE
+   ========================================================= */
+
+   .profile-page-container {
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 90px;
+}
+
+.friends-card h2 {
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.friends-card h3 {
+    margin: 26px 0 10px;
+    font-size: 17px;
+}
+
+.friend-search-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.friend-search-row .user-page-input {
+    flex: 1;
+}
+
+.friend-user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #efefef;
+}
+
+.friend-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.friend-user-info img {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.friend-user-info strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.friend-user-info p {
+    margin: 2px 0 0;
+    color: #737373;
+    font-size: 13px;
+}
+
+.friend-user-actions {
+    display: flex;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.friend-action-button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.friend-action-button:hover {
+    opacity: 0.85;
+}
+
+.friend-action-button.primary {
+    background-color: #0095f6;
+    color: white;
+}
+
+.friend-action-button.secondary {
+    background-color: #efefef;
+    color: #262626;
+}
+
+.friend-action-button.danger {
+    background-color: #ed4956;
+    color: white;
+}
+
+.friend-action-button.disabled {
+    background-color: #efefef;
+    color: #8e8e8e;
+    cursor: default;
+}
+
+.friend-empty-message {
+    margin: 8px 0;
+    color: #737373;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FRIENDSHIP STATUS BUTTONS IN FEED
+   ========================================================= */
+
+.post-user-info > strong,
+.feed-friend-button {
+    vertical-align: middle;
+}
+
+.feed-friend-button {
+    border: none;
+    background: transparent;
+
+    margin-left: 9px;
+    padding: 0;
+
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    cursor: pointer;
+}
+
+.feed-friend-button.is-not-friends,
+.feed-friend-button.is-incoming {
+    color: #0095f6;
+}
+
+.feed-friend-button.is-requested,
+.feed-friend-button.is-friends {
+    color: #737373;
+}
+
+.feed-friend-button:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.feed-friend-button:disabled {
+    cursor: default;
+    opacity: 0.65;
+}
+
+.dark-mode .feed-friend-button.is-not-friends,
+.dark-mode .feed-friend-button.is-incoming {
+    color: #4aa8ff;
+}
+
+.dark-mode .feed-friend-button.is-requested,
+.dark-mode .feed-friend-button.is-friends {
+    color: #a8a8a8;
 }

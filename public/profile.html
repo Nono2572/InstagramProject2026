@@ -39,7 +39,7 @@
 
     </div>
 
-    <div class="user-page-container">
+    <div class="user-page-container profile-page-container">
 
         <div class="user-page-card profile-user-card">
 
@@ -90,9 +90,47 @@
 
         </div>
 
+        <div class="user-page-card friends-card">
+
+            <h2>Friends</h2>
+
+            <div class="friend-search-row">
+                <input
+                    type="text"
+                    id="friend-search-input"
+                    class="user-page-input"
+                    placeholder="Search users by username or name">
+
+                <button
+                    type="button"
+                    id="friend-search-button"
+                    class="friend-action-button primary">
+                    Search
+                </button>
+            </div>
+
+            <p
+                id="friends-message"
+                class="user-page-message">
+            </p>
+
+            <div id="friend-search-results"></div>
+
+            <h3>Friend requests</h3>
+            <div id="friend-requests-list"></div>
+
+            <h3>Sent requests</h3>
+            <div id="sent-friend-requests-list"></div>
+
+            <h3>My friends</h3>
+            <div id="friends-list"></div>
+
+        </div>
+
     </div>
 
     <script src="js/profile.js"></script>
+    <script src="js/friends.js"></script>
 
 </body>
 

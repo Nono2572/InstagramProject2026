@@ -12,12 +12,9 @@
 
 <body class="instagram-feed-page">
 
-    <div class="container-fluid feed-page-wrapper">
+    <div class="feed-page-wrapper">
 
-        <div class="row feed-layout">
-
-            <!-- Left Sidebar -->
-            <div class="col-2 feed-sidebar">
+        <aside class="feed-sidebar">
 
                 <a href="#" class="instagram-logo-link" id="instagram-logo-link">
                     <img src="images/LogoTransparent.png"
@@ -37,6 +34,11 @@
                     <a class="sidebar-item" href="#" id="reels-button">
                         <i class="bi bi-play-btn"></i>
                         <span>Reels</span>
+                    </a>
+
+                    <a class="sidebar-item" href="groups.html" id="groups-button">
+                        <i class="bi bi-people"></i>
+                        <span>Groups</span>
                     </a>
 
                     <a class="sidebar-item" href="#">
@@ -87,346 +89,351 @@
                     Log Out
                 </a>
 
-            </div>
+            </aside>
+    
+        <main class="feed-content-area">
 
-            <!-- Main Feed -->
-            <div class="col-6 main-feed">
+            <div class="feed-center-wrapper">
+                <!-- Main Feed -->
+                <div class="main-feed">
 
-                <!-- Stories -->
-                <div class="stories-box">
+                    <!-- Stories -->
+                    <div class="stories-box">
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=1">
-                        <p>alex_photo</p>
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=1">
+                            <p>alex_photo</p>
+                        </div>
+
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=2">
+                            <p>sarah_art</p>
+                        </div>
+
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=3">
+                            <p>travel_guy</p>
+                        </div>
+
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=4">
+                            <p>michal</p>
+                        </div>
+
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=5">
+                            <p>nature</p>
+                        </div>
+
+                        <div class="story">
+                            <img src="https://picsum.photos/80/80?random=6">
+                            <p>bob</p>
+                        </div>
+
                     </div>
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=2">
-                        <p>sarah_art</p>
+                    <div id="new-post-message" class="new-post-message">
+                        New post was added successfully!
                     </div>
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=3">
-                        <p>travel_guy</p>
-                    </div>
+                    <div id="posts-container">
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=4">
-                        <p>michal</p>
-                    </div>
+                        <div id="no-posts-message" class="no-posts-message">
+                            No posts matched your search or filter.
+                        </div>
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=5">
-                        <p>nature</p>
-                    </div>
+                        <!-- Post 1 -->
 
-                    <div class="story">
-                        <img src="https://picsum.photos/80/80?random=6">
-                        <p>bob</p>
-                    </div>
+                        <div class="instagram-post" data-post-type="image" data-group-id="">
 
-                </div>
+                            <div class="post-header">
 
-                <div id="new-post-message" class="new-post-message">
-                    New post was added successfully!
-                </div>
+                                <img src="https://picsum.photos/50/50?random=11">
 
-                <div id="posts-container">
+                                <div>
+                                    <strong>alex_photo</strong>
+                                    <p>Tel Aviv, Israel</p>
+                                </div>
 
-                    <div id="no-posts-message" class="no-posts-message">
-                        No posts matched your search or filter.
-                    </div>
+                            </div>
 
-                    <!-- Post 1 -->
+                            <img class="post-image"
+                                src="https://picsum.photos/700/650?random=20">
 
-                    <div class="instagram-post" data-post-type="image" data-group-id="">
+                            <div class="post-actions">
 
-                        <div class="post-header">
+                                <button type="button"
+                                    class="like-button">
+                                    ♡
+                                </button>
 
-                            <img src="https://picsum.photos/50/50?random=11">
+                                <button type="button"
+                                    class="open-comments-window-button">
+                                    💬
+                                </button>
 
-                            <div>
+                                <button type="button"
+                                    class="share-button">
+                                    ↗️
+                                </button>
+
+                                <span class="save-icon">
+                                    ▢
+                                </span>
+
+                            </div>
+
+                            <p class="likes">
+                                <strong>234 likes</strong>
+                            </p>
+
+                            <p class="caption">
                                 <strong>alex_photo</strong>
-                                <p>Tel Aviv, Israel</p>
+                                Sharing a new moment from today.
+                            </p>
+
+                            <p class="comments">
+                                View all 62 comments
+                            </p>
+
+                        </div>
+
+                        <!-- Post 2 -->
+
+                        <div class="instagram-post" data-post-type="image" data-group-id="">
+
+                            <div class="post-header">
+
+                                <img src="https://picsum.photos/50/50?random=12">
+
+                                <div>
+                                    <strong>sarah_art</strong>
+                                    <p>Art Studio</p>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <img class="post-image"
+                                src="https://picsum.photos/700/650?random=21">
 
-                        <img class="post-image"
-                            src="https://picsum.photos/700/650?random=20">
+                            <div class="post-actions">
 
-                        <div class="post-actions">
+                                <button type="button"
+                                    class="like-button">
+                                    ♡
+                                </button>
 
-                            <button type="button"
-                                class="like-button">
-                                ♡
-                            </button>
+                                <button type="button"
+                                    class="open-comments-window-button">
+                                    💬
+                                </button>
 
-                            <button type="button"
-                                class="open-comments-window-button">
-                                💬
-                            </button>
+                                <button type="button"
+                                    class="share-button">
+                                    ↗️
+                                </button>
 
-                            <button type="button"
-                                class="share-button">
-                                ↗️
-                            </button>
+                                <span class="save-icon">
+                                    ▢
+                                </span>
 
-                            <span class="save-icon">
-                                ▢
-                            </span>
+                            </div>
 
-                        </div>
+                            <p class="likes">
+                                <strong>185 likes</strong>
+                            </p>
 
-                        <p class="likes">
-                            <strong>234 likes</strong>
-                        </p>
-
-                        <p class="caption">
-                            <strong>alex_photo</strong>
-                            Sharing a new moment from today.
-                        </p>
-
-                        <p class="comments">
-                            View all 62 comments
-                        </p>
-
-                    </div>
-
-                    <!-- Post 2 -->
-
-                    <div class="instagram-post" data-post-type="image" data-group-id="">
-
-                        <div class="post-header">
-
-                            <img src="https://picsum.photos/50/50?random=12">
-
-                            <div>
+                            <p class="caption">
                                 <strong>sarah_art</strong>
-                                <p>Art Studio</p>
+                                Found a new inspiration for my art.
+                            </p>
+
+                            <p class="comments">
+                                View all 18 comments
+                            </p>
+
+                        </div>
+                        <!-- Post 3 -->
+
+                        <div class="instagram-post" data-post-type="image" data-group-id="">
+
+                            <div class="post-header">
+                                <img src="https://picsum.photos/50/50?random=13">
+
+                                <div>
+                                    <strong>travel_guy</strong>
+                                    <p>Europe</p>
+                                </div>
                             </div>
 
-                        </div>
+                            <img class="post-image"
+                                src="https://picsum.photos/700/650?random=22">
 
-                        <img class="post-image"
-                            src="https://picsum.photos/700/650?random=21">
+                            <div class="post-actions">
 
-                        <div class="post-actions">
+                                <button type="button" class="like-button">
+                                    ♡
+                                </button>
 
-                            <button type="button"
-                                class="like-button">
-                                ♡
-                            </button>
+                                <button type="button"
+                                    class="open-comments-window-button">
+                                    💬
+                                </button>
 
-                            <button type="button"
-                                class="open-comments-window-button">
-                                💬
-                            </button>
+                                <button type="button"
+                                    class="share-button">
+                                    ↗️
+                                </button>
 
-                            <button type="button"
-                                class="share-button">
-                                ↗️
-                            </button>
+                                <span class="save-icon">
+                                    ▢
+                                </span>
 
-                            <span class="save-icon">
-                                ▢
-                            </span>
+                            </div>
 
-                        </div>
+                            <p class="likes">
+                                <strong>421 likes</strong>
+                            </p>
 
-                        <p class="likes">
-                            <strong>185 likes</strong>
-                        </p>
-
-                        <p class="caption">
-                            <strong>sarah_art</strong>
-                            Found a new inspiration for my art.
-                        </p>
-
-                        <p class="comments">
-                            View all 18 comments
-                        </p>
-
-                    </div>
-                    <!-- Post 3 -->
-
-                    <div class="instagram-post" data-post-type="image" data-group-id="">
-
-                        <div class="post-header">
-                            <img src="https://picsum.photos/50/50?random=13">
-
-                            <div>
+                            <p class="caption">
                                 <strong>travel_guy</strong>
-                                <p>Europe</p>
-                            </div>
+                                Hint for where I'm traveling next!
+                            </p>
+
+                            <p class="comments">
+                                View all 37 comments
+                            </p>
+
                         </div>
 
-                        <img class="post-image"
-                            src="https://picsum.photos/700/650?random=22">
+                    </div>
 
-                        <div class="post-actions">
+                </div>
 
-                            <button type="button" class="like-button">
-                                ♡
-                            </button>
+                <!-- Right Suggestions -->
 
-                            <button type="button"
-                                class="open-comments-window-button">
-                                💬
-                            </button>
+                <div class="suggestions-area">
 
-                            <button type="button"
-                                class="share-button">
-                                ↗️
-                            </button>
+                    <div class="profile-small">
 
-                            <span class="save-icon">
-                                ▢
+                        <img id="current-user-profile"
+                            src="images/BlankProfile.jpg"
+                            alt="Default profile picture">
+
+                        <div>
+
+                            <!-- Updated -->
+                            <strong id="current-username">
+                                college_user
+                            </strong>
+
+                            <!-- Updated -->
+                            <p id="current-full-name">
+                                Student Account
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="suggestions-title">
+                        <strong>Suggested for you</strong>
+                        <span>See All</span>
+                    </div>
+
+                    <div class="suggestion-user">
+
+                        <div class="suggestion-info">
+                            <img src="https://picsum.photos/40/40?random=40">
+
+                            <span>
+                                <strong>nature_daily</strong><br>
+                                Suggested for you
                             </span>
 
                         </div>
 
-                        <p class="likes">
-                            <strong>421 likes</strong>
+                        <a href="#">
+                            Follow
+                        </a>
+
+                    </div>
+
+                    <div class="suggestion-user">
+
+                        <div class="suggestion-info">
+                            <img src="https://picsum.photos/40/40?random=41">
+
+                            <span>
+                                <strong>coding_life</strong><br>
+                                Suggested for you
+                            </span>
+
+                        </div>
+
+                        <a href="#">
+                            Follow
+                        </a>
+
+                    </div>
+
+                    <div class="suggestion-user">
+
+                        <div class="suggestion-info">
+                            <img src="https://picsum.photos/40/40?random=42">
+
+                            <span>
+                                <strong>cats_world</strong><br>
+                                Suggested for you
+                            </span>
+
+                        </div>
+
+                        <a href="#">
+                            Follow
+                        </a>
+
+                    </div>
+
+                    <div class="suggestion-user">
+
+                        <div class="suggestion-info">
+                            <img src="https://picsum.photos/40/40?random=43">
+
+                            <span>
+                                <strong>travelgram</strong><br>
+                                Suggested for you
+                            </span>
+
+                        </div>
+
+                        <a href="#">
+                            Follow
+                        </a>
+
+                    </div>
+
+                    <div class="instagram-footer">
+
+                        <p>
+                            About · Help · Press · API · Jobs · Privacy · Terms ·
                         </p>
 
-                        <p class="caption">
-                            <strong>travel_guy</strong>
-                            Hint for where I'm traveling next!
+                        <p>
+                            Locations · Language · Meta Verified
                         </p>
 
-                        <p class="comments">
-                            View all 37 comments
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Right Suggestions -->
-
-            <div class="col-4 suggestions-area">
-
-                <div class="profile-small">
-
-                    <img id="current-user-profile"
-                        src="images/BlankProfile.jpg"
-                        alt="Default profile picture">
-
-                    <div>
-
-                        <!-- Updated -->
-                        <strong id="current-username">
-                            college_user
-                        </strong>
-
-                        <!-- Updated -->
-                        <p id="current-full-name">
-                            Student Account
+                        <p class="footer-copyright">
+                            © 2026 Instagram from Colman
                         </p>
 
                     </div>
 
                 </div>
 
-                <div class="suggestions-title">
-                    <strong>Suggested for you</strong>
-                    <span>See All</span>
-                </div>
 
-                <div class="suggestion-user">
 
-                    <div class="suggestion-info">
-                        <img src="https://picsum.photos/40/40?random=40">
-
-                        <span>
-                            <strong>nature_daily</strong><br>
-                            Suggested for you
-                        </span>
-
-                    </div>
-
-                    <a href="#">
-                        Follow
-                    </a>
-
-                </div>
-
-                <div class="suggestion-user">
-
-                    <div class="suggestion-info">
-                        <img src="https://picsum.photos/40/40?random=41">
-
-                        <span>
-                            <strong>coding_life</strong><br>
-                            Suggested for you
-                        </span>
-
-                    </div>
-
-                    <a href="#">
-                        Follow
-                    </a>
-
-                </div>
-
-                <div class="suggestion-user">
-
-                    <div class="suggestion-info">
-                        <img src="https://picsum.photos/40/40?random=42">
-
-                        <span>
-                            <strong>cats_world</strong><br>
-                            Suggested for you
-                        </span>
-
-                    </div>
-
-                    <a href="#">
-                        Follow
-                    </a>
-
-                </div>
-
-                <div class="suggestion-user">
-
-                    <div class="suggestion-info">
-                        <img src="https://picsum.photos/40/40?random=43">
-
-                        <span>
-                            <strong>travelgram</strong><br>
-                            Suggested for you
-                        </span>
-
-                    </div>
-
-                    <a href="#">
-                        Follow
-                    </a>
-
-                </div>
-
-                <div class="instagram-footer">
-
-                    <p>
-                        About · Help · Press · API · Jobs · Privacy · Terms ·
-                    </p>
-
-                    <p>
-                        Locations · Language · Meta Verified
-                    </p>
-
-                    <p class="footer-copyright">
-                        © 2026 Instagram from Colman
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
+        </main>
 
     </div>
 

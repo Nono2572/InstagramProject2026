@@ -2289,30 +2289,224 @@ backToTopButton.addEventListener(
     }
 );
 
-
 /* =========================================================
-   SECTION 10 - SHARE
+   FACEBOOK SHARE
    ========================================================= */
 
-const shareOverlay =
-    document.getElementById(
-        "share-overlay"
-    );
+let facebookSdkReady = false;
+let facebookSdkPromise = null;
 
-const closeShareWindow =
-    document.getElementById(
-        "close-share-window"
-    );
+function loadFacebookSdk() {
 
-const shareMessage =
-    document.getElementById(
-        "share-message"
+    if (facebookSdkPromise) {
+        return facebookSdkPromise;
+    }
+
+    facebookSdkPromise =
+        fetch("/api/facebook/config")
+
+        .then(function (response) {
+            return response.json();
+        })
+
+        .then(function (config) {
+
+            if (!config.appId) {
+
+                throw new Error(
+                    "FACEBOOK_APP_ID is missing from the server .env file."
+                );
+            }
+
+
+            return new Promise(
+                function (resolve, reject) {
+
+                    window.fbAsyncInit =
+                        function () {
+
+                            FB.init({
+                                appId:
+                                    config.appId,
+
+                                xfbml:
+                                    false,
+
+                                version:
+                                    config.apiVersion ||
+                                    "v26.0"
+                            });
+
+
+                            facebookSdkReady =
+                                true;
+
+
+                            resolve();
+                        };
+
+                    if (
+                        document.getElementById(
+                            "facebook-jssdk"
+                        )
+                    ) {
+
+                        if (window.FB) {
+                            window.fbAsyncInit();
+                        }
+
+                        return;
+                    }
+
+                    const script =
+                        document.createElement(
+                            "script"
+                        );
+
+
+                    script.id =
+                        "facebook-jssdk";
+
+
+                    script.async =
+                        true;
+
+
+                    script.defer =
+                        true;
+
+
+                    script.crossOrigin =
+                        "anonymous";
+
+
+                    script.src =
+                        "https://connect.facebook.net/en_US/sdk.js";
+
+
+                    script.onerror =
+                        function () {
+
+                            reject(
+                                new Error(
+                                    "Could not load the Facebook SDK."
+                                )
+                            );
+                        };
+
+
+                    document.head.appendChild(
+                        script
+                    );
+                }
+            );
+        });
+
+
+    return facebookSdkPromise;
+}
+
+function getFacebookShareUrl(
+    postElement
+) {
+
+    const postId =
+        postElement.dataset.postId;
+
+
+    if (!postId) {
+        return window.location.href;
+    }
+
+
+    return (
+        window.location.origin +
+        "/share/post/" +
+        encodeURIComponent(postId)
     );
+}
+
+
+function sharePostOnFacebook(
+    postElement,
+    shareButton
+) {
+
+    shareButton.disabled =
+        true;
+
+
+    loadFacebookSdk()
+
+        .then(function () {
+
+            if (
+                !facebookSdkReady ||
+                !window.FB
+            ) {
+
+                throw new Error(
+                    "Facebook SDK is not ready."
+                );
+            }
+
+            FB.ui(
+                {
+                    method:
+                        "share",
+
+                    href:
+                        getFacebookShareUrl(
+                            postElement
+                        )
+                },
+
+                function (response) {
+
+                    shareButton.disabled =
+                        false;
+
+
+                    if (
+                        response &&
+                        response.error_message
+                    ) {
+
+                        console.log(
+                            "Facebook sharing error:",
+                            response.error_message
+                        );
+                    }
+                }
+            );
+        })
+
+
+        .catch(function (error) {
+
+            shareButton.disabled =
+                false;
+
+
+            console.error(
+                "Facebook share setup error:",
+                error
+            );
+
+
+            alert(
+                "Facebook sharing is not configured yet. " +
+                "Add FACEBOOK_APP_ID to the server .env file."
+            );
+        });
+}
 
 
 postsContainer.addEventListener(
     "click",
+
     function (event) {
+
         const shareButton =
             event.target.closest(
                 ".share-button"
@@ -2324,57 +2518,23 @@ postsContainer.addEventListener(
         }
 
 
-        shareMessage.innerHTML = "";
-
-        shareOverlay.classList.add(
-            "visible"
-        );
-    }
-);
-
-
-closeShareWindow.addEventListener(
-    "click",
-    function () {
-        shareOverlay.classList.remove(
-            "visible"
-        );
-    }
-);
-
-
-shareOverlay.addEventListener(
-    "click",
-    function (event) {
-        if (
-            event.target ===
-            shareOverlay
-        ) {
-            shareOverlay.classList.remove(
-                "visible"
+        const postElement =
+            shareButton.closest(
+                ".instagram-post"
             );
+
+
+        if (!postElement) {
+            return;
         }
+
+
+        sharePostOnFacebook(
+            postElement,
+            shareButton
+        );
     }
 );
-
-
-const shareOptions =
-    document.getElementsByClassName(
-        "share-option"
-    );
-
-
-for (
-    let i = 0;
-    i < shareOptions.length;
-    i++
-) {
-    shareOptions[i].onclick =
-        function () {
-            shareMessage.innerHTML =
-                "Post shared successfully!";
-        };
-}
 
 
 function loadSavedPosts() {

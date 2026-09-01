@@ -62,6 +62,40 @@ const groupLocation =
         "group-location"
     );
 
+    const groupLocationSection =
+    document.getElementById(
+        "group-location-section"
+    );
+
+
+const groupMap =
+    document.getElementById(
+        "group-map"
+    );
+
+
+const groupMapWrapper =
+    document.getElementById(
+        "group-map-wrapper"
+    );
+
+
+const groupMapEmpty =
+    document.getElementById(
+        "group-map-empty"
+    );
+
+
+const groupMapAddress =
+    document.getElementById(
+        "group-map-address"
+    );
+
+
+const changeGroupLocationButton =
+    document.getElementById(
+        "change-group-location-button"
+    );
 
 const groupMemberCount =
     document.getElementById(
@@ -314,6 +348,7 @@ function displayGroup(group) {
         group.location ||
         "No location";
 
+    displayGroupMap(group);
 
     const members =
         group.members || [];
@@ -357,7 +392,86 @@ function displayGroup(group) {
     updateGroupButtons();
 }
 
+/* =========================================================
+   GROUP LOCATION MAP
+   ========================================================= */
 
+function displayGroupMap(group) {
+
+    groupLocationSection.hidden =
+        false;
+
+
+    const location =
+        String(
+            group.location || ""
+        ).trim();
+
+
+    /*
+        No location was saved
+        in MongoDB.
+    */
+
+    if (location === "") {
+
+        groupMapAddress.textContent =
+            "No address has been added.";
+
+
+        groupMapWrapper.hidden =
+            true;
+
+
+        groupMapEmpty.hidden =
+            false;
+
+
+        groupMap.removeAttribute(
+            "src"
+        );
+
+
+        return;
+    }
+
+
+    /*
+        Show the address that came
+        from MongoDB.
+    */
+
+    groupMapAddress.textContent =
+        location;
+
+
+    groupMapEmpty.hidden =
+        true;
+
+
+    groupMapWrapper.hidden =
+        false;
+
+
+    /*
+        Send the address to Google Maps.
+
+        encodeURIComponent is important
+        because addresses contain spaces,
+        commas, etc.
+    */
+
+    const encodedLocation =
+        encodeURIComponent(
+            location
+        );
+
+
+    groupMap.src =
+        "https://maps.google.com/maps?q=" +
+        encodedLocation +
+        "&z=14&output=embed";
+}
 
 /* =========================================================
    MEMBERS
@@ -469,12 +583,13 @@ function updateGroupButtons() {
     leaveGroupButton.hidden = true;
     editGroupButton.hidden = true;
     deleteGroupButton.hidden = true;
-
+    changeGroupLocationButton.hidden = true;
 
     if (isOwner) {
 
         editGroupButton.hidden = false;
         deleteGroupButton.hidden = false;
+        changeGroupLocationButton.hidden = false;
 
         return;
     }
@@ -1002,7 +1117,26 @@ editGroupButton.addEventListener(
     }
 );
 
+changeGroupLocationButton.addEventListener(
+    "click",
 
+    function () {
+        editGroupButton.click();
+
+        setTimeout(
+            function () {
+
+                document
+                    .getElementById(
+                        "edit-group-location"
+                    )
+                    .focus();
+
+            },
+            0
+        );
+    }
+);
 
 closeEditGroupButton.addEventListener(
     "click",

@@ -1164,82 +1164,6 @@ body {
     display: block;
 }
 
-
-/* =========================================================
-    SHARE POPUP
-   ========================================================= */
-
-.share-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1100;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.55);
-}
-
-.share-overlay.visible {
-    display: flex;
-}
-
-.share-window {
-    width: 360px;
-    max-width: 90%;
-    padding: 24px;
-    background-color: white;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-}
-
-.close-share-window {
-    float: right;
-    border: none;
-    background: transparent;
-    font-size: 30px;
-    cursor: pointer;
-}
-
-.share-window h2 {
-    margin-bottom: 20px;
-    font-size: 22px;
-}
-
-.share-option {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 12px;
-    border: 1px solid #dbdbdb;
-    border-radius: 10px;
-    background-color: #ffffff;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.share-option:hover {
-    background-color: #f2f2f2;
-}
-
-.share-message {
-    color: #24743f;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-.dark-mode .share-window {
-    background-color: #1a1a1a;
-    color: white;
-}
-
-.dark-mode .share-option {
-    background-color: #262626;
-    color: white;
-    border-color: #444444;
-}
-
-
 /* =========================================================
    REGISTER / PROFILE / EDIT PROFILE
    ========================================================= */
@@ -3072,4 +2996,328 @@ body {
 
         padding-left: 112px;
     }
+}
+
+/* =========================================================
+   GROUP LOCATION
+   ========================================================= */
+
+.group-location-section {
+    width: 100%;
+
+    margin-top: 20px;
+    margin-bottom: 24px;
+
+    padding: 24px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #dbdbdb;
+    border-radius: 16px;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------- HEADER ---------- */
+
+.group-location-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+
+.group-location-title {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.group-location-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background-color: #f5f5f5;
+
+    font-size: 21px;
+}
+
+
+.group-location-title h2 {
+    margin: 0 0 3px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #262626;
+}
+
+
+.group-location-title p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #737373;
+}
+
+
+/* ---------- CHANGE LOCATION ---------- */
+
+.group-location-edit-button {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 14px;
+
+    border: none;
+    border-radius: 9px;
+
+    background-color: #f1f1f1;
+
+    color: #262626;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.group-location-edit-button:hover {
+    background-color: #e7e7e7;
+}
+
+
+.group-location-edit-button:active {
+    transform: scale(0.97);
+}
+
+
+/* ---------- MAP ---------- */
+
+.group-map-wrapper {
+    width: 100%;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e2e2;
+    border-radius: 13px;
+
+    background-color: #f5f5f5;
+}
+
+
+.group-map {
+    display: block;
+
+    width: 100%;
+    height: 360px;
+
+    border: 0;
+}
+
+
+/* ---------- NO LOCATION ---------- */
+
+.group-map-empty {
+    padding: 50px 20px;
+
+    text-align: center;
+
+    background-color: #fafafa;
+
+    border: 1px dashed #d5d5d5;
+    border-radius: 13px;
+
+    color: #737373;
+}
+
+
+.group-map-empty > i {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 34px;
+
+    color: #a8a8a8;
+}
+
+
+.group-map-empty h3 {
+    margin: 0 0 5px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    color: #262626;
+}
+
+
+.group-map-empty p {
+    margin: 0;
+
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+
+    .group-location-section {
+        padding: 18px;
+    }
+
+
+    .group-location-header {
+        align-items: flex-start;
+    }
+
+
+    .group-map {
+        height: 280px;
+    }
+
+
+    .group-location-edit-button {
+        padding: 8px 11px;
+    }
+}
+
+/* =========================================================
+   PROFILE STATISTICS
+   ========================================================= */
+
+.profile-statistics-card {
+    max-width: 1000px;
+}
+
+
+.profile-statistics-header {
+    margin-bottom: 24px;
+}
+
+
+.profile-statistics-header h2 {
+    margin: 0 0 5px;
+
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+.profile-statistics-header p {
+    margin: 0;
+
+    text-align: center;
+
+    color: #737373;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CHART LAYOUT
+   ========================================================= */
+
+.profile-charts-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+.profile-chart-box {
+    min-width: 0;
+
+    padding: 20px;
+
+    border: 1px solid #efefef;
+    border-radius: 12px;
+
+    background-color: #fafafa;
+}
+
+
+.profile-chart-box h3 {
+    margin: 0 0 5px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+.profile-chart-box p {
+    margin: 0 0 20px;
+
+    color: #737373;
+
+    font-size: 13px;
+}
+
+
+.profile-chart {
+    width: 100%;
+
+    min-height: 280px;
+}
+
+
+.profile-chart svg {
+    display: block;
+
+    width: 100%;
+    height: auto;
+}
+
+
+.profile-statistics-message {
+    margin: 20px 0 0;
+
+    text-align: center;
+
+    color: #737373;
+}
+
+@media (max-width: 750px) {
+
+    .profile-charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.statistics-bar {
+    fill: #075bd2;
+}
+
+
+.statistics-bar:hover {
+    opacity: 0.8;
 }

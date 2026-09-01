@@ -223,8 +223,10 @@
                                     <strong id="group-owner-name"></strong>
                                 </span>
 
-                            </div>
 
+                                
+                            </div>
+                            
                         </div>
 
 
@@ -279,7 +281,84 @@
 
                 </section>
 
+<!-- =================================
+     GROUP LOCATION
+     ================================= -->
 
+<section
+    id="group-location-section"
+    class="group-location-section"
+    hidden
+>
+
+    <div class="group-location-header">
+
+        <div class="group-location-title">
+
+            <div class="group-location-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+
+            <div>
+                <h2>Group Location</h2>
+
+                <p id="group-map-address">
+                    Loading location...
+                </p>
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="change-group-location-button"
+            class="group-location-edit-button"
+            hidden
+        >
+            <i class="bi bi-pencil"></i>
+            Change location
+        </button>
+
+    </div>
+
+
+    <div
+        id="group-map-empty"
+        class="group-map-empty"
+        hidden
+    >
+
+        <i class="bi bi-geo-alt"></i>
+
+        <h3>No location added</h3>
+
+        <p>
+            The group owner has not added
+            a location yet.
+        </p>
+
+    </div>
+
+
+    <div
+        id="group-map-wrapper"
+        class="group-map-wrapper"
+        hidden
+    >
+
+        <iframe
+            id="group-map"
+            class="group-map"
+            title="Group location on Google Maps"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+
+    </div>
+
+</section>
 
                 <!-- =================================
                      BODY
@@ -420,14 +499,14 @@
                     required
                 >
 
-
                 <label for="edit-group-location">
-                    Location
+                    Group address
                 </label>
 
                 <input
                     type="text"
                     id="edit-group-location"
+                    placeholder="Dizengoff St 50, Tel Aviv, Israel"
                 >
 
 

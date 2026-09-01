@@ -124,11 +124,88 @@
 
             <h3>My friends</h3>
             <div id="friends-list"></div>
+            
+
 
         </div>
+            <!-- =========================================
+            PROFILE STATISTICS
+            ========================================= -->
 
+            <div class="user-page-card profile-statistics-card">
+
+                <div class="profile-statistics-header">
+
+                    <h2>
+                        Activity Statistics
+                    </h2>
+
+                    <p>
+                        Your posts and engagement
+                    </p>
+
+                </div>
+
+
+                <div class="profile-charts-grid">
+
+
+                    <!-- POSTS OVER TIME -->
+
+                    <div class="profile-chart-box">
+
+                        <h3>
+                            Posts Over Time
+                        </h3>
+
+                        <p>
+                            Number of posts created each month
+                        </p>
+
+                        <div
+                            id="posts-over-time-chart"
+                            class="profile-chart"
+                        ></div>
+
+                    </div>
+
+
+
+                    <!-- LIKES PER POST -->
+
+                    <div class="profile-chart-box">
+
+                        <h3>
+                            Likes Per Post
+                        </h3>
+
+                        <p>
+                            Number of likes received by each post
+                        </p>
+
+                        <div
+                            id="likes-per-post-chart"
+                            class="profile-chart"
+                        ></div>
+
+                    </div>
+
+
+                </div>
+
+
+                <p
+                    id="profile-statistics-message"
+                    class="profile-statistics-message"
+                ></p>
+
+            </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    <script src="js/user-session.js"></script>
     <script src="js/profile.js"></script>
     <script src="js/friends.js"></script>
 

@@ -81,74 +81,146 @@ function displayGroups(groups) {
 
     groupsList.innerHTML = "";
 
+
     if (groups.length === 0) {
-        groupsList.innerHTML =
-            "<p>No groups found.</p>";
+
+        groupsList.innerHTML = `
+            <div class="groups-empty-state">
+
+                <i class="bi bi-people"></i>
+
+                <h3>
+                    No groups found
+                </h3>
+
+                <p>
+                    Try changing your search filters
+                    or create a new group.
+                </p>
+
+            </div>
+        `;
 
         return;
     }
 
+
     groups.forEach(function (group) {
 
         const groupElement =
-            document.createElement("div");
+            document.createElement("article");
+
 
         groupElement.classList.add(
             "group-card"
         );
+
 
         const ownerName =
             group.owner
                 ? group.owner.username
                 : "Unknown";
 
+
+        const memberCount =
+            group.members
+                ? group.members.length
+                : 0;
+
+
         groupElement.innerHTML = `
-            <h3>${group.name}</h3>
 
-            <p>
-                ${group.description || ""}
+            <div class="group-card-top">
+
+                <div class="group-card-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+
+                <span class="group-card-category">
+                    ${group.category}
+                </span>
+
+            </div>
+
+
+            <h3>
+                ${group.name}
+            </h3>
+
+
+            <p class="group-card-description">
+                ${
+                    group.description ||
+                    "No description was provided."
+                }
             </p>
 
-            <p>
-                <strong>Category:</strong>
-                ${group.category}
-            </p>
 
-            <p>
-                <strong>Location:</strong>
-                ${group.location || "Not specified"}
-            </p>
+            <div class="group-card-meta">
+
+                <span>
+                    <i class="bi bi-people"></i>
+
+                    ${memberCount}
+                    ${
+                        memberCount === 1
+                            ? "member"
+                            : "members"
+                    }
+                </span>
+
+
+                <span>
+                    <i class="bi bi-geo-alt"></i>
+
+                    ${
+                        group.location ||
+                        "No location"
+                    }
+                </span>
+
+            </div>
+
 
             <div
                 class="group-weather"
                 id="weather-${group._id}"
             >
+                <i class="bi bi-cloud-sun"></i>
+
                 Loading weather...
             </div>
 
 
-            <p>
-                <strong>Owner:</strong>
-                ${ownerName}
-            </p>
+            <div class="group-card-footer">
 
-            <p>
-                <strong>Members:</strong>
-                ${group.members?.length || 0}
-            </p>
+                <span class="group-owner-text">
+
+                    Created by
+                    <strong>
+                        @${ownerName}
+                    </strong>
+
+                </span>
 
 
-            <button
-                class="view-group-button"
-                data-id="${group._id}"
-            >
-                View Group
-            </button>
+                <button
+                    type="button"
+                    class="view-group-button"
+                    data-id="${group._id}"
+                >
+                    View Group
+                </button>
+
+            </div>
         `;
+
 
         groupsList.appendChild(
             groupElement
         );
+
 
         loadGroupWeather(group);
     });

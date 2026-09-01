@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -13,136 +12,434 @@
     <title>Groups</title>
 
     <link
+        rel="icon"
+        type="image/png"
+        href="images/LogoTransparent.png"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
         rel="stylesheet"
-        href="/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
     >
 </head>
 
-<body>
 
-    <header>
-        <h1>Groups</h1>
-    </header>
+<body class="instagram-groups-page">
+
+    <div class="groups-page-wrapper">
 
 
-    <main>
-        <section class="create-group-section">
+        <!-- =====================================================
+             LEFT SIDEBAR
+             ===================================================== -->
 
-            <h2>Create Group</h2>
+        <aside class="feed-sidebar">
 
-            <form id="create-group-form">
-
-                <label for="create-group-name">
-                    Group name
-                </label>
-
-                <input
-                    type="text"
-                    id="create-group-name"
-                    maxlength="50"
-                    required
+            <a
+                href="feed.html"
+                class="instagram-logo-link"
+            >
+                <img
+                    src="images/LogoTransparent.png"
+                    class="instagram-sidebar-logo"
+                    alt="Instagram Logo"
                 >
+            </a>
 
 
-                <label for="create-group-description">
-                    Description
-                </label>
+            <div class="sidebar-menu">
 
-                <textarea
-                    id="create-group-description"
-                    maxlength="300"
-                    rows="4"
-                ></textarea>
-
-
-                <label for="create-group-category">
-                    Category
-                </label>
-
-                <input
-                    type="text"
-                    id="create-group-category"
-                    required
+                <a
+                    class="sidebar-item"
+                    href="feed.html"
                 >
+                    <i class="bi bi-house-door"></i>
+
+                    <span>
+                        Home
+                    </span>
+                </a>
 
 
-                <label for="create-group-location">
-                    Location
-                </label>
-
-                <input
-                    type="text"
-                    id="create-group-location"
+                <a
+                    class="sidebar-item active"
+                    href="groups.html"
                 >
+                    <i class="bi bi-people-fill"></i>
+
+                    <span>
+                        Groups
+                    </span>
+                </a>
 
 
-                <p id="create-group-error"></p>
-
-
-                <button type="submit">
-                    Create Group
-                </button>
-
-            </form>
-
-        </section>
-
-        
-        <section class="group-search-section">
-
-            <h2>Search Groups</h2>
-
-            <form id="group-search-form">
-
-                <input
-                    type="text"
-                    id="search-name"
-                    placeholder="Group name"
+                <a
+                    class="sidebar-item"
+                    href="feed.html"
                 >
+                    <i class="bi bi-send"></i>
 
-                <input
-                    type="text"
-                    id="search-category"
-                    placeholder="Category"
+                    <span>
+                        Messages
+                    </span>
+                </a>
+
+
+                <a
+                    class="sidebar-item"
+                    href="profile.html"
                 >
+                    <img
+                        id="sidebar-profile-image"
+                        class="sidebar-profile-image"
+                        src="images/BlankProfile.jpg"
+                        alt="Profile"
+                    >
 
-                <input
-                    type="text"
-                    id="search-location"
-                    placeholder="Location"
-                >
+                    <span>
+                        Profile
+                    </span>
+                </a>
 
-                <button type="submit">
-                    Search
-                </button>
-
-                <button
-                    type="button"
-                    id="show-all-groups"
-                >
-                    Show All
-                </button>
-
-            </form>
-
-        </section>
+            </div>
 
 
-        <section>
+            <a
+                href="#"
+                id="feed-logout-button"
+                class="logout-button"
+            >
+                Log Out
+            </a>
 
-            <h2>Groups</h2>
-
-            <p id="groups-error"></p>
-
-            <div id="groups-list"></div>
-
-        </section>
-
-        
-
-    </main>
+        </aside>
 
 
+
+        <!-- =====================================================
+             MAIN GROUPS AREA
+             ===================================================== -->
+
+        <main class="groups-content-area">
+
+            <div class="groups-page-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <header class="groups-page-header">
+
+                    <div>
+                        <h1>
+                            Groups
+                        </h1>
+
+                        <p>
+                            Find communities, meet people and join
+                            conversations that interest you.
+                        </p>
+                    </div>
+
+
+                    <a
+                        href="#create-group-section"
+                        class="groups-create-shortcut"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+
+                        Create group
+                    </a>
+
+                </header>
+
+
+
+                <!-- =================================================
+                     CREATE + SEARCH
+                     ================================================= -->
+
+                <div class="groups-tools-grid">
+
+
+                    <!-- CREATE GROUP -->
+
+                    <section
+                        class="groups-panel"
+                        id="create-group-section"
+                    >
+
+                        <div class="groups-panel-heading">
+
+                            <div class="groups-panel-icon">
+                                <i class="bi bi-plus-circle"></i>
+                            </div>
+
+                            <div>
+                                <h2>
+                                    Create a group
+                                </h2>
+
+                                <p>
+                                    Start a new community
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <form id="create-group-form">
+
+                            <div class="groups-form-field">
+
+                                <label for="create-group-name">
+                                    Group name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="create-group-name"
+                                    maxlength="50"
+                                    placeholder="For example: Anime Fans"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="groups-form-field">
+
+                                <label for="create-group-description">
+                                    Description
+                                </label>
+
+                                <textarea
+                                    id="create-group-description"
+                                    maxlength="300"
+                                    rows="4"
+                                    placeholder="What is this group about?"
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="groups-form-row">
+
+                                <div class="groups-form-field">
+
+                                    <label for="create-group-category">
+                                        Category
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="create-group-category"
+                                        placeholder="Gaming"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="groups-form-field">
+
+                                    <label for="create-group-location">
+                                        Location
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="create-group-location"
+                                        placeholder="Tel Aviv"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <p
+                                id="create-group-error"
+                                class="groups-error-message"
+                            ></p>
+
+
+                            <button
+                                type="submit"
+                                class="groups-primary-button"
+                            >
+                                <i class="bi bi-plus-lg"></i>
+
+                                Create Group
+                            </button>
+
+                        </form>
+
+                    </section>
+
+
+
+                    <!-- SEARCH -->
+
+                    <section class="groups-panel">
+
+                        <div class="groups-panel-heading">
+
+                            <div class="groups-panel-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+
+                            <div>
+                                <h2>
+                                    Find groups
+                                </h2>
+
+                                <p>
+                                    Search using up to three filters
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <form id="group-search-form">
+
+                            <div class="groups-form-field">
+
+                                <label for="search-name">
+                                    Group name
+                                </label>
+
+                                <div class="groups-input-with-icon">
+
+                                    <i class="bi bi-search"></i>
+
+                                    <input
+                                        type="text"
+                                        id="search-name"
+                                        placeholder="Search by name"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="groups-form-field">
+
+                                <label for="search-category">
+                                    Category
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="search-category"
+                                    placeholder="Music, gaming, study..."
+                                >
+
+                            </div>
+
+
+                            <div class="groups-form-field">
+
+                                <label for="search-location">
+                                    Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="search-location"
+                                    placeholder="City or location"
+                                >
+
+                            </div>
+
+
+                            <div class="groups-search-buttons">
+
+                                <button
+                                    type="submit"
+                                    class="groups-primary-button"
+                                >
+                                    Search
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    id="show-all-groups"
+                                    class="groups-secondary-button"
+                                >
+                                    Show All
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </section>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     GROUP RESULTS
+                     ================================================= -->
+
+                <section class="groups-results-section">
+
+                    <div class="groups-results-header">
+
+                        <div>
+                            <h2>
+                                Discover groups
+                            </h2>
+
+                            <p>
+                                Communities you can explore
+                            </p>
+                        </div>
+
+
+                        <div class="groups-results-icon">
+                            <i class="bi bi-compass"></i>
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        id="groups-error"
+                        class="groups-error-message"
+                    ></p>
+
+
+                    <div
+                        id="groups-list"
+                        class="groups-list-grid"
+                    ></div>
+
+                </section>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script src="js/user-session.js"></script>
     <script src="js/groups.js"></script>
 
 </body>

@@ -1691,3 +1691,1354 @@ body {
 .dark-mode .feed-friend-button.is-friends {
     color: #a8a8a8;
 }
+
+/* =========================================================
+   GROUPS PAGE
+   ========================================================= */
+
+.instagram-groups-page {
+    margin: 0;
+    min-height: 100vh;
+
+    background: #fafafa;
+
+    color: #111;
+
+    font-family:
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+
+.groups-page-wrapper {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   MAIN AREA
+   ========================================================= */
+
+.groups-content-area {
+    margin-left: 220px;
+
+    width: calc(100% - 220px);
+
+    min-height: 100vh;
+
+    padding: 35px 40px 80px;
+}
+
+
+.groups-page-content {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.groups-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+
+.groups-page-header h1 {
+    margin: 0 0 7px;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+
+.groups-page-header p {
+    margin: 0;
+
+    color: #737373;
+
+    font-size: 15px;
+}
+
+
+.groups-create-shortcut {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 11px 18px;
+
+    background: #0095f6;
+
+    color: white;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+
+.groups-create-shortcut:hover {
+    background: #1877f2;
+
+    color: white;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CREATE + SEARCH PANELS
+   ========================================================= */
+
+.groups-tools-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 22px;
+
+    margin-bottom: 40px;
+}
+
+
+.groups-panel {
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 14px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.03);
+}
+
+
+.groups-panel-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 24px;
+}
+
+
+.groups-panel-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    background: #f0f7ff;
+
+    color: #0095f6;
+
+    border-radius: 12px;
+
+    font-size: 20px;
+}
+
+
+.groups-panel-heading h2 {
+    margin: 0 0 3px;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.groups-panel-heading p {
+    margin: 0;
+
+    color: #737373;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.groups-form-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 16px;
+}
+
+
+.groups-form-field label {
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #262626;
+}
+
+
+.groups-form-field input,
+.groups-form-field textarea {
+    width: 100%;
+
+    padding: 11px 13px;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 8px;
+
+    background: #fafafa;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s,
+        background-color 0.2s;
+}
+
+
+.groups-form-field textarea {
+    resize: vertical;
+
+    min-height: 95px;
+}
+
+
+.groups-form-field input:focus,
+.groups-form-field textarea:focus {
+    border-color: #a8a8a8;
+
+    background: white;
+}
+
+
+.groups-form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+
+.groups-input-with-icon {
+    position: relative;
+}
+
+
+.groups-input-with-icon i {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8e8e8e;
+}
+
+
+.groups-input-with-icon input {
+    padding-left: 36px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.groups-primary-button,
+.groups-secondary-button {
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 10px 18px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.groups-primary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 7px;
+
+    background: #0095f6;
+
+    color: white;
+}
+
+
+.groups-primary-button:hover {
+    background: #1877f2;
+}
+
+
+.groups-secondary-button {
+    background: #efefef;
+
+    color: #262626;
+}
+
+
+.groups-secondary-button:hover {
+    background: #dbdbdb;
+}
+
+
+.groups-search-buttons {
+    display: flex;
+
+    gap: 9px;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
+
+.groups-results-section {
+    margin-top: 15px;
+}
+
+
+.groups-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+.groups-results-header h2 {
+    margin: 0 0 4px;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+
+.groups-results-header p {
+    margin: 0;
+
+    color: #737373;
+
+    font-size: 14px;
+}
+
+
+.groups-results-icon {
+    font-size: 25px;
+
+    color: #8e8e8e;
+}
+
+
+.groups-list-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   GROUP CARD
+   ========================================================= */
+
+.group-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 285px;
+
+    padding: 22px;
+
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 14px;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
+}
+
+
+.group-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #c7c7c7;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.07);
+}
+
+
+.group-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.group-card-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #fd1d1d,
+            #fcb045
+        );
+
+    color: white;
+
+    font-size: 20px;
+}
+
+
+.group-card-category {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    background: #f3f3f3;
+
+    color: #555;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+.group-card h3 {
+    margin: 0 0 8px;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.group-card-description {
+    margin: 0 0 18px;
+
+    min-height: 40px;
+
+    color: #737373;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.group-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 10px 16px;
+
+    margin-bottom: 15px;
+
+    color: #555;
+
+    font-size: 12px;
+}
+
+
+.group-card-meta span {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+.group-card-meta i {
+    color: #8e8e8e;
+}
+
+
+.group-weather {
+    padding: 9px 11px;
+
+    margin-bottom: 17px;
+
+    background: #fafafa;
+
+    border-radius: 8px;
+
+    color: #555;
+
+    font-size: 12px;
+}
+
+
+.group-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: auto;
+}
+
+
+.group-owner-text {
+    color: #737373;
+
+    font-size: 11px;
+}
+
+
+.view-group-button {
+    border: none;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    background: #0095f6;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s;
+}
+
+
+.view-group-button:hover {
+    background: #1877f2;
+}
+
+
+.groups-error-message {
+    margin: 10px 0;
+
+    color: #ed4956;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ACTIVE SIDEBAR ITEM
+   ========================================================= */
+
+.instagram-groups-page
+.sidebar-item.active {
+    font-weight: 700;
+
+    background: #f2f2f2;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .groups-tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .groups-content-area {
+        margin-left: 90px;
+
+        width: calc(100% - 90px);
+
+        padding:
+            25px 20px
+            60px;
+    }
+
+
+    .groups-page-header {
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+
+    .groups-form-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   SINGLE GROUP PAGE
+   ========================================================= */
+
+.single-group-page {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background: #fafafa;
+
+    font-family:
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    color: #262626;
+}
+
+
+.single-group-wrapper {
+    min-height: 100vh;
+}
+
+
+.single-group-content-area {
+    margin-left: 220px;
+
+    width: calc(100% - 220px);
+
+    min-height: 100vh;
+
+    padding:
+        30px 40px
+        80px;
+}
+
+
+.single-group-content {
+    width: 100%;
+    max-width: 1050px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.single-group-back {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+    color: #262626;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.single-group-back:hover {
+    color: #0095f6;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.group-page-message {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #737373;
+}
+
+
+/* =========================================================
+   GROUP HEADER
+   ========================================================= */
+
+.group-header-card {
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 3px 15px
+        rgba(0, 0, 0, 0.035);
+}
+
+
+.group-header-main {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 22px;
+}
+
+
+.group-large-icon {
+    width: 90px;
+    height: 90px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #fd1d1d,
+            #fcb045
+        );
+
+    color: white;
+
+    font-size: 37px;
+}
+
+
+.group-header-info {
+    flex: 1;
+}
+
+
+.group-header-category {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    margin-bottom: 8px;
+
+    background: #f1f1f1;
+
+    border-radius: 20px;
+
+    color: #555;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+.group-header-info h1 {
+    margin:
+        0 0
+        8px;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+.group-header-description {
+    max-width: 650px;
+
+    margin-bottom: 15px;
+
+    color: #555;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+}
+
+
+.group-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 15px;
+
+    margin-bottom: 17px;
+
+    color: #737373;
+
+    font-size: 12px;
+}
+
+
+.group-header-meta span {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+.group-owner-line {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #737373;
+
+    font-size: 12px;
+}
+
+
+.group-owner-line img {
+    width: 27px;
+    height: 27px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.group-owner-line strong {
+    color: #262626;
+}
+
+
+/* =========================================================
+   GROUP BUTTONS
+   ========================================================= */
+
+.group-header-actions {
+    display: flex;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+.group-join-button,
+.group-leave-button,
+.group-edit-button,
+.group-delete-button {
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 9px 14px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+
+.group-join-button {
+    background: #0095f6;
+
+    color: white;
+}
+
+
+.group-join-button:hover {
+    background: #1877f2;
+}
+
+
+.group-leave-button,
+.group-edit-button {
+    background: #efefef;
+
+    color: #262626;
+}
+
+
+.group-leave-button:hover,
+.group-edit-button:hover {
+    background: #dbdbdb;
+}
+
+
+.group-delete-button {
+    background: #fff0f1;
+
+    color: #ed4956;
+}
+
+
+.group-delete-button:hover {
+    background: #ffe0e3;
+}
+
+
+/* =========================================================
+   GROUP BODY
+   ========================================================= */
+
+.single-group-body {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        280px;
+
+    gap: 28px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.group-section-heading,
+.group-members-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+
+.group-section-heading h2,
+.group-members-heading h2 {
+    margin: 0 0 3px;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+.group-section-heading p,
+.group-members-heading p {
+    margin: 0;
+
+    color: #737373;
+
+    font-size: 12px;
+}
+
+
+.group-post-count {
+    padding: 5px 9px;
+
+    background: #efefef;
+
+    border-radius: 20px;
+
+    color: #555;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   POSTS
+   ========================================================= */
+
+.group-posts-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+.group-post-card {
+    overflow: hidden;
+
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 12px;
+}
+
+
+.group-post-header {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px 15px;
+}
+
+
+.group-post-header img {
+    width: 38px;
+    height: 38px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.group-post-header strong {
+    font-size: 13px;
+}
+
+
+.group-post-header p {
+    margin: 2px 0 0;
+
+    color: #737373;
+
+    font-size: 11px;
+}
+
+
+.group-post-image,
+.group-post-video {
+    display: block;
+
+    width: 100%;
+
+    max-height: 650px;
+
+    object-fit: cover;
+
+    background: black;
+}
+
+
+.group-text-post {
+    min-height: 230px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px;
+
+    background: #f4f4f4;
+
+    text-align: center;
+
+    font-size: 22px;
+
+    overflow-wrap: anywhere;
+}
+
+
+.group-post-caption {
+    padding: 14px 15px;
+
+    margin: 0;
+
+    font-size: 13px;
+}
+
+
+.group-no-posts {
+    padding: 60px 20px;
+
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    color: #737373;
+}
+
+
+.group-no-posts i {
+    display: block;
+
+    margin-bottom: 12px;
+
+    font-size: 34px;
+}
+
+
+.group-no-posts h3 {
+    color: #262626;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   MEMBERS
+   ========================================================= */
+
+.group-members-panel {
+    position: sticky;
+
+    top: 20px;
+
+    padding: 20px;
+
+    background: white;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 12px;
+}
+
+
+.group-members-heading > i {
+    color: #737373;
+
+    font-size: 20px;
+}
+
+
+.group-members-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+.group-member-row {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.group-member-row img {
+    width: 38px;
+    height: 38px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.group-member-row strong {
+    font-size: 12px;
+}
+
+
+.group-member-row p {
+    margin: 2px 0 0;
+
+    color: #737373;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   EDIT GROUP OVERLAY
+   ========================================================= */
+
+.edit-group-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+
+    z-index: 1000;
+}
+
+
+.edit-group-overlay.visible {
+    display: flex;
+}
+
+
+.edit-group-window {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 24px;
+
+    background: white;
+
+    border-radius: 14px;
+}
+
+
+.edit-group-window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+.edit-group-window-header h2 {
+    margin: 0;
+
+    font-size: 20px;
+}
+
+
+.edit-group-window-header button {
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    cursor: pointer;
+}
+
+
+.edit-group-form,
+#edit-group-form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+#edit-group-form label {
+    margin-bottom: 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+#edit-group-form input,
+#edit-group-form textarea {
+    margin-bottom: 15px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dbdbdb;
+
+    border-radius: 8px;
+
+    background: #fafafa;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+#edit-group-form input:focus,
+#edit-group-form textarea:focus {
+    border-color: #a8a8a8;
+
+    background: white;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
+
+    .single-group-body {
+        grid-template-columns: 1fr;
+    }
+
+
+    .group-members-panel {
+        position: static;
+    }
+
+
+    .group-header-main {
+        flex-wrap: wrap;
+    }
+
+
+    .group-header-actions {
+        width: 100%;
+
+        padding-left: 112px;
+    }
+}

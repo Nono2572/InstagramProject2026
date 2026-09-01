@@ -954,10 +954,33 @@ post.appendChild(header);
         <button type="button" class="share-button">↗️</button>
         <span class="save-icon">▢</span>
     `;
+    const likeButton =
+    actions.querySelector(
+        ".like-button"
+    );
 
-    const likes = document.createElement("p");
-    likes.classList.add("likes");
-    likes.innerHTML = "<strong>0 likes</strong>";
+
+if (postData.isLiked) {
+
+    likeButton.classList.add(
+        "liked"
+    );
+
+    likeButton.textContent =
+        "♥";
+}
+
+    const likes =
+    document.createElement("p");
+
+    likes.classList.add(
+        "likes"
+    );
+
+    likes.innerHTML =
+        "<strong>" +
+        (postData.likes || 0) +
+        " likes</strong>";
 
     const captionParagraph = document.createElement("p");
     captionParagraph.classList.add("caption");
@@ -970,9 +993,21 @@ post.appendChild(header);
         document.createTextNode(postData.caption || "")
     );
 
-    const comments = document.createElement("p");
-    comments.classList.add("comments");
-    comments.textContent = "0 comments";
+    const comments =
+        document.createElement("p");
+
+    comments.classList.add(
+        "comments"
+    );
+
+
+    comments.textContent =
+        (postData.commentsCount || 0) +
+        " comments";
+
+
+    post.dataset.commentsCount =
+        postData.commentsCount || 0;
 
     post.append(actions, likes);
 
@@ -1503,7 +1538,9 @@ function updateCommentsCounter(post) {
 
 
 function renderCommentsWindow() {
+
     commentsWindowList.innerHTML = "";
+
 
     if (!activeCommentsPost) {
         return;
@@ -1512,35 +1549,76 @@ function renderCommentsWindow() {
 
     const comments =
         activeCommentsPost
-            .commentsListData || [];
+            .commentsListData ||
+        [];
 
 
     if (comments.length === 0) {
+
         const emptyMessage =
-            document.createElement("p");
+            document.createElement(
+                "p"
+            );
+
 
         emptyMessage.classList.add(
             "empty-comments-message"
         );
 
+
         emptyMessage.textContent =
-            "No new comments yet.";
+            "No comments yet.";
+
 
         commentsWindowList.appendChild(
             emptyMessage
         );
+
 
         return;
     }
 
 
     comments.forEach(
-        function (commentText) {
+        function (commentData) {
+
             const comment =
-                document.createElement("p");
+                document.createElement(
+                    "div"
+                );
+
 
             comment.classList.add(
                 "single-comment"
+            );
+
+
+            const profileImage =
+                document.createElement(
+                    "img"
+                );
+
+
+            profileImage.classList.add(
+                "comment-profile-image"
+            );
+
+
+            profileImage.src =
+                commentData.author &&
+                commentData.author.profileImage
+                    ? commentData.author.profileImage
+                    : "images/BlankProfile.jpg";
+
+
+            const commentBody =
+                document.createElement(
+                    "div"
+                );
+
+
+            commentBody.classList.add(
+                "comment-body"
             );
 
 
@@ -1549,34 +1627,34 @@ function renderCommentsWindow() {
                     "strong"
                 );
 
-            const currentUsername =
-                document.getElementById(
-                    "current-username"
+
+            username.textContent =
+                commentData.author &&
+                commentData.author.username
+                    ? commentData.author.username
+                    : "Unknown";
+
+
+            const text =
+                document.createElement(
+                    "span"
                 );
 
 
-            if (
-                currentUsername &&
-                currentUsername
-                    .textContent
-                    .trim() !== ""
-            ) {
-                username.textContent =
-                    currentUsername
-                        .textContent
-                        .trim() +
-                    " ";
-            } else {
-                username.textContent =
-                    "college_user ";
-            }
+            text.textContent =
+                " " +
+                commentData.text;
+
+
+            commentBody.append(
+                username,
+                text
+            );
 
 
             comment.append(
-                username,
-                document.createTextNode(
-                    commentText
-                )
+                profileImage,
+                commentBody
             );
 
 
@@ -1588,7 +1666,79 @@ function renderCommentsWindow() {
 }
 
 
-function openCommentsWindow(post) {
+async function loadCommentsForPost(
+    post
+) {
+
+    const postId =
+        post.dataset.postId;
+
+
+    if (!postId) {
+
+        post.commentsListData = [];
+
+        return;
+    }
+
+
+    commentsWindowList.innerHTML =
+        "<p>Loading comments...</p>";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts/" +
+                postId +
+                "/comments"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message ||
+                "Could not load comments."
+            );
+        }
+
+
+        post.commentsListData =
+            result.comments;
+
+
+        post.dataset.commentsCount =
+            result.commentsCount;
+
+
+        updateCommentsCounter(
+            post
+        );
+
+
+        renderCommentsWindow();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        commentsWindowList.innerHTML =
+            "<p>Could not load comments.</p>";
+    }
+}
+
+
+async function openCommentsWindow(post) {
     activeCommentsPost = post;
 
     commentsWindowInput.value = "";
@@ -1621,45 +1771,6 @@ function closeCommentsWindow() {
     activeCommentsPost = null;
 }
 
-
-function addCommentToActivePost(
-    commentText
-) {
-    if (!activeCommentsPost) {
-        return;
-    }
-
-
-    if (
-        !activeCommentsPost
-            .commentsListData
-    ) {
-        activeCommentsPost
-            .commentsListData = [];
-    }
-
-
-    activeCommentsPost
-        .commentsListData
-        .push(commentText);
-
-
-    activeCommentsPost
-        .dataset
-        .commentsCount =
-        Number(
-            activeCommentsPost
-                .dataset
-                .commentsCount
-        ) + 1;
-
-
-    updateCommentsCounter(
-        activeCommentsPost
-    );
-
-    renderCommentsWindow();
-}
 
 
 /* Add comments functionality to existing posts */
@@ -1717,8 +1828,16 @@ postsContainer.addEventListener(
 
 commentsWindowForm.addEventListener(
     "submit",
-    function (event) {
+
+    async function (event) {
+
         event.preventDefault();
+
+
+        if (!activeCommentsPost) {
+            return;
+        }
+
 
         const commentText =
             commentsWindowInput
@@ -1731,19 +1850,139 @@ commentsWindowForm.addEventListener(
         }
 
 
-        addCommentToActivePost(
-            commentText
-        );
+        const postId =
+            activeCommentsPost
+                .dataset
+                .postId;
 
 
-        commentsWindowInput.value = "";
+        if (!postId) {
 
-        commentsWindowTypingMessage
-            .classList.remove(
-                "visible"
+            alert(
+                "This sample post is not stored in MongoDB."
             );
 
-        commentsWindowInput.focus();
+            return;
+        }
+
+
+        const sendButton =
+            commentsWindowForm
+                .querySelector(
+                    ".send-comment-button"
+                );
+
+
+        sendButton.disabled = true;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/posts/" +
+                    postId +
+                    "/comments",
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                text:
+                                    commentText
+                            })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    result.message ||
+                    "Could not add comment."
+                );
+
+                return;
+            }
+
+
+            /*
+                Add MongoDB's actual returned
+                comment to our current window.
+            */
+
+            if (
+                !activeCommentsPost
+                    .commentsListData
+            ) {
+
+                activeCommentsPost
+                    .commentsListData = [];
+            }
+
+
+            activeCommentsPost
+                .commentsListData
+                .push(
+                    result.comment
+                );
+
+
+            activeCommentsPost
+                .dataset
+                .commentsCount =
+                result.commentsCount;
+
+
+            updateCommentsCounter(
+                activeCommentsPost
+            );
+
+
+            renderCommentsWindow();
+
+
+            commentsWindowInput.value =
+                "";
+
+
+            commentsWindowTypingMessage
+                .classList.remove(
+                    "visible"
+                );
+
+
+            commentsWindowInput.focus();
+
+
+        } catch (error) {
+
+            console.error(
+                "Comment request failed:",
+                error
+            );
+
+
+            alert(
+                "Could not connect to the server."
+            );
+
+
+        } finally {
+
+            sendButton.disabled =
+                false;
+        }
     }
 );
 
@@ -1795,12 +2034,13 @@ commentsOverlay.addEventListener(
 
 
 /* =========================================================
-   SECTION 1 - LIKE
+   LIKE
    ========================================================= */
-
 postsContainer.addEventListener(
     "click",
-    function (event) {
+
+    async function (event) {
+
         const likeButton =
             event.target.closest(
                 ".like-button"
@@ -1817,59 +2057,132 @@ postsContainer.addEventListener(
                 ".instagram-post"
             );
 
-        const likesText =
-            post.querySelector(
-                ".likes strong"
-            );
 
-
-        let currentLikes =
-            parseInt(
-                likesText.textContent
-            );
-
-
-        if (
-            likeButton.classList.contains(
-                "liked"
-            )
-        ) {
-            likeButton.classList.remove(
-                "liked"
-            );
-
-            likeButton.innerHTML = "♡";
-
-            currentLikes--;
-        } else {
-            likeButton.classList.add(
-                "liked"
-            );
-
-            likeButton.innerHTML = "♥️";
-
-            currentLikes++;
-
-            likeButton.classList.add(
-                "like-effect"
-            );
-
-
-            window.setTimeout(
-                function () {
-                    likeButton.classList
-                        .remove(
-                            "like-effect"
-                        );
-                },
-                300
-            );
+        if (!post) {
+            return;
         }
 
 
-        likesText.textContent =
-            currentLikes +
-            " likes";
+        const postId =
+            post.dataset.postId;
+
+
+        /*
+            A real MongoDB post must have an ID.
+        */
+
+        if (!postId) {
+
+            alert(
+                "This sample post is not stored in MongoDB."
+            );
+
+            return;
+        }
+
+
+        likeButton.disabled = true;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/posts/" +
+                    postId +
+                    "/like",
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    result.message ||
+                    "Could not update like."
+                );
+
+                return;
+            }
+
+
+            const likesText =
+                post.querySelector(
+                    ".likes strong"
+                );
+
+
+            likesText.textContent =
+                result.likes +
+                (
+                    result.likes === 1
+                        ? " like"
+                        : " likes"
+                );
+
+
+            if (result.liked) {
+
+                likeButton.classList.add(
+                    "liked"
+                );
+
+                likeButton.textContent =
+                    "♥";
+
+
+                likeButton.classList.add(
+                    "like-effect"
+                );
+
+
+                window.setTimeout(
+                    function () {
+
+                        likeButton.classList.remove(
+                            "like-effect"
+                        );
+
+                    },
+                    300
+                );
+
+
+            } else {
+
+                likeButton.classList.remove(
+                    "liked"
+                );
+
+                likeButton.textContent =
+                    "♡";
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Like request failed:",
+                error
+            );
+
+
+            alert(
+                "Could not connect to the server."
+            );
+
+
+        } finally {
+
+            likeButton.disabled =
+                false;
+        }
     }
 );
 

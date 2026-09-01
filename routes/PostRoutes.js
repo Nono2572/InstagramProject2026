@@ -55,6 +55,26 @@ router.put(
     postController.updatePost
 );
 
+router.post(
+    "/:id/like",
+    requireLogin,
+    postController.toggleLike
+);
+
+
+router.get(
+    "/:id/comments",
+    requireLogin,
+    postController.getComments
+);
+
+
+router.post(
+    "/:id/comments",
+    requireLogin,
+    postController.addComment
+);
+
 router.delete(
     "/:id",
     requireLogin,

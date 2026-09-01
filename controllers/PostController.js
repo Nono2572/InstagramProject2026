@@ -19,15 +19,62 @@ exports.getPosts = async function (req, res) {
             ];
         }
 
-        const posts = await Post.find(filter)
-    .populate("author", "username fullName profileImage")
-    .populate("group", "name")
-    .sort({ createdAt: -1 });
-
-        res.json({
-            success: true,
-            posts: posts
+        const posts =
+    await Post.find(filter)
+        .populate(
+            "author",
+            "username fullName profileImage"
+        )
+        .populate(
+            "group",
+            "name"
+        )
+        .sort({
+            createdAt: -1
         });
+
+
+const currentUserId =
+    String(
+        req.session.userId ||
+        (
+            req.session.user &&
+            req.session.user._id
+        ) ||
+        ""
+    );
+
+
+const postsForFrontend =
+    posts.map(
+        function (post) {
+
+            const postObject =
+                post.toObject();
+
+
+            postObject.isLiked =
+                post.likedBy.some(
+                    function (likedUserId) {
+
+                        return (
+                            String(likedUserId) ===
+                            currentUserId
+                        );
+                    }
+                );
+
+
+            return postObject;
+        }
+    );
+
+
+res.json({
+    success: true,
+    posts: postsForFrontend
+});
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -221,6 +268,267 @@ exports.getReels = async function (req, res) {
             success: false,
             message: "Failed to get reels.",
             error: error.message
+        });
+    }
+};
+
+exports.toggleLike = async function (req, res) {
+
+    try {
+
+        const post =
+            await Post.findById(
+                req.params.id
+            );
+
+
+        if (!post) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Post not found."
+            });
+        }
+
+
+        const userId =
+            req.session.userId ||
+            (
+                req.session.user &&
+                req.session.user._id
+            );
+
+
+        const alreadyLiked =
+            post.likedBy.some(
+                function (likedUserId) {
+
+                    return (
+                        likedUserId.toString() ===
+                        userId.toString()
+                    );
+                }
+            );
+
+
+        if (alreadyLiked) {
+
+            post.likedBy.pull(
+                userId
+            );
+
+        } else {
+
+            post.likedBy.addToSet(
+                userId
+            );
+        }
+
+
+        /*
+            The number shown in the UI
+            always matches the database.
+        */
+
+        post.likes =
+            post.likedBy.length;
+
+
+        await post.save();
+
+
+        return res.json({
+            success: true,
+
+            liked:
+                !alreadyLiked,
+
+            likes:
+                post.likes
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Like error:",
+            error
+        );
+
+
+        return res.status(500).json({
+            success: false,
+            message: "Could not update like."
+        });
+    }
+};
+
+exports.getComments = async function (
+    req,
+    res
+) {
+
+    try {
+
+        const post =
+            await Post.findById(
+                req.params.id
+            )
+            .populate(
+                "comments.author",
+                "username fullName profileImage"
+            );
+
+
+        if (!post) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Post not found."
+            });
+        }
+
+
+        return res.json({
+            success: true,
+
+            comments:
+                post.comments,
+
+            commentsCount:
+                post.comments.length
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Get comments error:",
+            error
+        );
+
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Could not load comments."
+        });
+    }
+};
+
+exports.addComment = async function (
+    req,
+    res
+) {
+
+    try {
+
+        const text =
+            String(
+                req.body.text || ""
+            ).trim();
+
+
+        if (text === "") {
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Comment cannot be empty."
+            });
+        }
+
+
+        if (text.length > 300) {
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Comment may contain at most 300 characters."
+            });
+        }
+
+
+        const post =
+            await Post.findById(
+                req.params.id
+            );
+
+
+        if (!post) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Post not found."
+            });
+        }
+
+
+        const userId =
+            req.session.userId ||
+            (
+                req.session.user &&
+                req.session.user._id
+            );
+
+
+        post.comments.push({
+            author: userId,
+            text: text
+        });
+
+
+        post.commentsCount =
+            post.comments.length;
+
+
+        await post.save();
+
+
+        /*
+            Load it again with author information
+            so the frontend receives username/image.
+        */
+
+        const populatedPost =
+            await Post.findById(
+                post._id
+            )
+            .populate(
+                "comments.author",
+                "username fullName profileImage"
+            );
+
+
+        const newComment =
+            populatedPost.comments[
+                populatedPost.comments.length - 1
+            ];
+
+
+        return res.status(201).json({
+            success: true,
+
+            comment:
+                newComment,
+
+            commentsCount:
+                populatedPost.comments.length
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Add comment error:",
+            error
+        );
+
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Could not add comment."
         });
     }
 };

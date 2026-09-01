@@ -10,6 +10,8 @@ const mediaInputSection = document.getElementById("media-input-section");
 const mediaInput = document.getElementById("post-media");
 const captionInput = document.getElementById("post-caption");
 const locationInput = document.getElementById("post-location");
+const postGroupInput = document.getElementById("post-group");
+const groupId = postGroupInput.value;
 
 const errorMessage = document.getElementById("create-post-error");
 const successMessage = document.getElementById("new-post-message");
@@ -18,18 +20,21 @@ const noPostsMessage = document.getElementById("no-posts-message");
 
 const instagramLogoLink = document.getElementById("instagram-logo-link");
 const homeButton = document.getElementById("home-button");
+const reelsButton = document.getElementById("reels-button");
 
 const openSearchPanel = document.getElementById("open-search-panel");
 const closeSearchPanel = document.getElementById("close-search-panel");
 const searchOverlay = document.getElementById("search-overlay");
 const postSearchInput = document.getElementById("post-search-input");
+const postGroupFilter = document.getElementById("post-group-filter");
 const postTypeFilter = document.getElementById("post-type-filter");
 const searchResultsMessage = document.getElementById("search-results-message");
 const applySearchButton = document.getElementById("apply-search-button");
 
 let appliedSearchText = "";
 let appliedPostType = "all";
-
+let appliedGroupId = "all";
+let currentUserId = "";
 
 /* =========================================================
    HOME / INSTAGRAM LOGO
@@ -47,6 +52,16 @@ instagramLogoLink.addEventListener("click", function (event) {
 
 homeButton.addEventListener("click", function (event) {
     event.preventDefault();
+
+    appliedSearchText = "";
+    appliedPostType = "all";
+    appliedGroupId = "all";
+
+    postSearchInput.value = "";
+    postTypeFilter.value = "all";
+    postGroupFilter.value = "all";
+
+    filterPosts();
 
     window.scrollTo({
         top: 0,
@@ -107,28 +122,24 @@ postTypeInput.addEventListener("change", function () {
     }
 });
 
-
 createPostForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const postType = postTypeInput.value;
     const caption = captionInput.value.trim();
     const location = locationInput.value.trim();
+    const groupId = postGroupInput.value;
     const selectedFile = mediaInput.files[0];
 
     errorMessage.textContent = "";
 
     if (postType === "text" && caption === "") {
-        errorMessage.textContent =
-            "Please enter text for the post.";
-
+        errorMessage.textContent = "Please enter text for the post.";
         return;
     }
 
     if (postType !== "text" && !selectedFile) {
-        errorMessage.textContent =
-            "Please choose a media file.";
-
+        errorMessage.textContent = "Please choose a media file.";
         return;
     }
 
@@ -136,9 +147,7 @@ createPostForm.addEventListener("submit", function (event) {
         postType === "image" &&
         !selectedFile.type.startsWith("image/")
     ) {
-        errorMessage.textContent =
-            "Please choose a valid image file.";
-
+        errorMessage.textContent = "Please choose a valid image file.";
         return;
     }
 
@@ -146,18 +155,37 @@ createPostForm.addEventListener("submit", function (event) {
         postType === "video" &&
         !selectedFile.type.startsWith("video/")
     ) {
-        errorMessage.textContent =
-            "Please choose a valid video file.";
-
+        errorMessage.textContent = "Please choose a valid video file.";
         return;
     }
 
-    const newPost = createPostElement(
-        postType,
-        caption,
-        selectedFile,
-        location
-    );
+    const formData = new FormData();
+
+    formData.append("postType", postType);
+    formData.append("caption", caption);
+    formData.append("location", location);
+    formData.append("group", groupId);
+
+    if (selectedFile) {
+        formData.append("media", selectedFile);
+    }
+
+    fetch("/api/posts", {
+        method: "POST",
+        body: formData
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+    if (!data.success) {
+        errorMessage.textContent =
+            data.message || "Could not save the post.";
+        return;
+    }
+
+    const newPost =
+        createPostElementFromDatabase(data.post);
 
     postsContainer.prepend(newPost);
 
@@ -169,22 +197,23 @@ createPostForm.addEventListener("submit", function (event) {
         behavior: "smooth",
         block: "center"
     });
+})
+    .catch(function (error) {
+        console.log("Create post frontend error:", error);
+
+        errorMessage.textContent =
+            "The post was saved, but the page could not display it. Check Console.";
+            });
 });
 
-
-function createPostElement(
-    postType,
-    caption,
-    selectedFile,
-    location
-) {
+function createPostElement(postType, caption, selectedFile, location, groupId) {
     const post = document.createElement("div");
 
     post.classList.add("instagram-post");
     post.classList.add("newly-created-post");
 
     post.dataset.postType = postType;
-
+    post.dataset.groupId = groupId; 
 
     /* Post header */
 
@@ -429,6 +458,190 @@ function createPostElement(
     return post;
 }
 
+function createPostElementFromDatabase(postData) {
+    const post = document.createElement("div");
+
+    post.classList.add("instagram-post");
+    post.classList.add("newly-created-post");
+
+    post.dataset.postType = postData.postType;
+    const databaseGroupId =
+    postData.group && postData.group._id
+        ? postData.group._id
+        : postData.group || "";
+
+    post.dataset.groupId = databaseGroupId.toString();
+    post.dataset.postId = postData._id;
+
+    const header = document.createElement("div");
+    header.classList.add("post-header");
+
+   const profileImage = document.createElement("img");
+
+if (postData.author && postData.author.profileImage) {
+    profileImage.src = postData.author.profileImage;
+} else {
+    profileImage.src = "images/BlankProfile.jpg";
+}
+
+    const headerText = document.createElement("div");
+    headerText.classList.add("post-user-info");
+
+    const username = document.createElement("strong");
+
+    if (postData.author && postData.author.username) {
+        username.textContent = postData.author.username;
+    } else {
+        username.textContent = "college_user";
+    }
+
+    const locationText = document.createElement("p");
+    locationText.textContent = postData.location || "";
+
+    headerText.append(username, locationText);
+
+header.append(profileImage, headerText);
+
+const authorId =
+    postData.author && postData.author._id
+        ? postData.author._id
+        : postData.author && postData.author.id
+            ? postData.author.id
+            : postData.author || "";
+
+console.log("Post author id:", authorId);
+console.log("Current user id:", currentUserId);
+
+if (authorId.toString() === currentUserId.toString()) {
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.classList.add("delete-post-button");
+    deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+
+    header.appendChild(deleteButton);
+}
+
+post.appendChild(header);
+
+    if (postData.postType === "image") {
+        const postImage = document.createElement("img");
+        postImage.classList.add("post-image");
+        postImage.src = postData.mediaUrl;
+        postImage.alt = "Post image";
+
+        post.appendChild(postImage);
+    }
+
+    if (postData.postType === "video") {
+        const postVideo = document.createElement("video");
+        postVideo.classList.add("post-video");
+        postVideo.src = postData.mediaUrl;
+        postVideo.controls = true;
+
+        post.appendChild(postVideo);
+    }
+
+    if (postData.postType === "text") {
+        const textPost = document.createElement("div");
+        textPost.classList.add("text-post-content");
+        textPost.textContent = postData.caption;
+
+        post.appendChild(textPost);
+    }
+
+    const actions = document.createElement("div");
+    actions.classList.add("post-actions");
+
+    actions.innerHTML = `
+        <button type="button" class="like-button">♡</button>
+        <button type="button" class="open-comments-window-button">💬</button>
+        <button type="button" class="share-button">↗️</button>
+        <span class="save-icon">▢</span>
+    `;
+
+    const likes = document.createElement("p");
+    likes.classList.add("likes");
+    likes.innerHTML = "<strong>0 likes</strong>";
+
+    const captionParagraph = document.createElement("p");
+    captionParagraph.classList.add("caption");
+
+    const captionUsername = document.createElement("strong");
+    captionUsername.textContent = username.textContent + " ";
+
+    captionParagraph.appendChild(captionUsername);
+    captionParagraph.appendChild(
+        document.createTextNode(postData.caption || "")
+    );
+
+    const comments = document.createElement("p");
+    comments.classList.add("comments");
+    comments.textContent = "0 comments";
+
+    post.append(actions, likes);
+
+    if (postData.caption !== "") {
+        post.appendChild(captionParagraph);
+    }
+
+    post.appendChild(comments);
+
+    return post;
+}
+
+function loadCurrentUserForFeed() {
+    fetch("/api/users/me")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.success && data.user) {
+                currentUserId =
+                    data.user._id ||
+                    data.user.id ||
+                    "";
+            }
+
+            console.log("Current user id:", currentUserId);
+
+            loadSavedPosts();
+        })
+        .catch(function (error) {
+            console.log("Could not load current user:", error);
+            loadSavedPosts();
+        });
+}
+
+function loadSavedPosts() {
+    fetch("/api/posts")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                console.log("Could not load posts.");
+                return;
+            }
+
+            data.posts.forEach(function (postData) {
+                const postElement =
+                    createPostElementFromDatabase(postData);
+
+                const firstStaticPost =
+                    postsContainer.querySelector(".instagram-post");
+
+                postsContainer.insertBefore(
+                    postElement,
+                    firstStaticPost
+                );
+            });
+
+            filterPosts();
+        })
+        .catch(function (error) {
+            console.log("Could not connect to posts API:", error);
+        });
+}
 
 /* Close create-post window */
 
@@ -440,6 +653,7 @@ function closeCreateWindow() {
     createPostForm.reset();
 
     postTypeInput.value = "image";
+    postGroupInput.value = "";
 
     mediaInputSection.style.display =
         "block";
@@ -478,39 +692,53 @@ function showSuccessMessage() {
    DELETE POST
    ========================================================= */
 
-postsContainer.addEventListener(
-    "click",
-    function (event) {
-        const deleteButton =
-            event.target.closest(
-                ".delete-post-button"
-            );
+postsContainer.addEventListener("click", function (event) {
+    const deleteButton = event.target.closest(".delete-post-button");
 
-        if (!deleteButton) {
-            return;
-        }
-
-        const post =
-            deleteButton.closest(
-                ".newly-created-post"
-            );
-
-        if (!post) {
-            return;
-        }
-
-        const shouldDelete =
-            window.confirm(
-                "Are you sure you want to delete this post?"
-            );
-
-        if (shouldDelete) {
-            post.remove();
-
-            filterPosts();
-        }
+    if (!deleteButton) {
+        return;
     }
-);
+
+    const post = deleteButton.closest(".instagram-post");
+
+    if (!post) {
+        return;
+    }
+
+    const postId = post.dataset.postId;
+
+    if (!postId) {
+        alert("This post was not saved in the database, so it cannot be deleted from MongoDB.");
+        return;
+    }
+
+    const shouldDelete = window.confirm(
+        "Are you sure you want to delete this post?"
+    );
+
+    if (!shouldDelete) {
+        return;
+    }
+
+    fetch("/api/posts/" + postId, {
+        method: "DELETE"
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                alert(data.message || "Could not delete the post.");
+                return;
+            }
+
+            post.remove();
+            filterPosts();
+        })
+        .catch(function () {
+            alert("Could not connect to the server.");
+        });
+});
 
 
 /* =========================================================
@@ -522,11 +750,9 @@ openSearchPanel.addEventListener(
     function (event) {
         event.preventDefault();
 
-        postSearchInput.value =
-            appliedSearchText;
-
-        postTypeFilter.value =
-            appliedPostType;
+        postSearchInput.value = appliedSearchText;
+        postTypeFilter.value = appliedPostType;
+        postGroupFilter.value = appliedGroupId;
 
         searchOverlay.classList.add(
             "visible"
@@ -537,32 +763,27 @@ openSearchPanel.addEventListener(
 );
 
 
-applySearchButton.addEventListener(
-    "click",
-    function () {
-        appliedSearchText =
-            postSearchInput.value.trim();
+applySearchButton.addEventListener("click", function () {
+    appliedSearchText = postSearchInput.value.trim();
 
-        appliedPostType =
-            postTypeFilter.value;
+    appliedPostType = postTypeFilter.value;
 
-        filterPosts();
+    appliedGroupId = postGroupFilter.value;
 
-        searchOverlay.classList.remove(
-            "visible"
-        );
-    }
-);
+    filterPosts();
+
+    searchOverlay.classList.remove("visible");
+});
 
 
 closeSearchPanel.addEventListener(
     "click",
     function () {
-        postSearchInput.value =
-            appliedSearchText;
+        postSearchInput.value = appliedSearchText;
 
-        postTypeFilter.value =
-            appliedPostType;
+        postTypeFilter.value = appliedPostType;
+
+        postGroupFilter.value = appliedGroupId;
 
         searchOverlay.classList.remove(
             "visible"
@@ -575,11 +796,11 @@ searchOverlay.addEventListener(
     "click",
     function (event) {
         if (event.target === searchOverlay) {
-            postSearchInput.value =
-                appliedSearchText;
+            postSearchInput.value = appliedSearchText;
 
-            postTypeFilter.value =
-                appliedPostType;
+            postTypeFilter.value = appliedPostType;
+
+            postGroupFilter.value = appliedGroupId;
 
             searchOverlay.classList.remove(
                 "visible"
@@ -598,6 +819,9 @@ function filterPosts() {
     const selectedType =
         appliedPostType;
 
+    const selectedGroup =
+    appliedGroupId;
+
     const allPosts =
         postsContainer.querySelectorAll(
             ".instagram-post"
@@ -610,6 +834,8 @@ function filterPosts() {
         const postType =
             post.dataset.postType;
 
+        const postGroupId = post.dataset.groupId || "";
+
         const postText =
             post.textContent.toLowerCase();
 
@@ -621,10 +847,16 @@ function filterPosts() {
             selectedType === "all" ||
             postType === selectedType;
 
+            const matchesGroup =
+            selectedGroup === "all" ||
+            selectedGroup === postGroupId ||
+            (
+                selectedGroup === "none" &&
+                postGroupId === ""
+            );
 
         if (
-            matchesText &&
-            matchesType
+            matchesText && matchesType && matchesGroup
         ) {
             post.style.display = "";
             visiblePosts++;
@@ -634,23 +866,45 @@ function filterPosts() {
     });
 
 
-    if (visiblePosts === 0) {
+        if (visiblePosts === 0) {
         searchResultsMessage.textContent =
             "No matching posts found.";
 
-        noPostsMessage.classList.add(
-            "visible"
-        );
+        if (selectedType === "video") {
+            noPostsMessage.textContent =
+                "No reels were found. Try creating a video post.";
+        } else {
+            noPostsMessage.textContent =
+                "No posts matched your search or filter.";
+        }
+
+        noPostsMessage.classList.add("visible");
     } else {
         searchResultsMessage.textContent =
-            visiblePosts +
-            " matching post(s).";
+            visiblePosts + " matching post(s).";
 
-        noPostsMessage.classList.remove(
-            "visible"
-        );
+        noPostsMessage.classList.remove("visible");
     }
 }
+
+
+reelsButton.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    appliedSearchText = "";
+    appliedPostType = "video";
+
+    postSearchInput.value = appliedSearchText;
+    postTypeFilter.value = appliedPostType;
+    postGroupFilter.value = appliedGroupId;
+
+    filterPosts();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
 
 
 /* =========================================================
@@ -1416,3 +1670,170 @@ for (
                 "Post shared successfully!";
         };
 }
+
+
+function loadSavedPosts() {
+    fetch("/api/posts")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                console.log("Could not load posts.");
+                return;
+            }
+
+            data.posts.forEach(function (postData) {
+                const postElement =
+                    createPostElementFromDatabase(postData);
+
+                const firstStaticPost =
+                    postsContainer.querySelector(".instagram-post");
+
+                postsContainer.insertBefore(
+                    postElement,
+                    firstStaticPost
+                );
+            });
+
+            filterPosts();
+        })
+        .catch(function (error) {
+            console.log("Could not connect to posts API:", error);
+        });
+}
+
+function loadCurrentUserForFeed() {
+    fetch("/api/users/me")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.success && data.user) {
+                currentUserId =
+                    data.user._id ||
+                    data.user.id ||
+                    "";
+            }
+
+            loadSavedPosts();
+        })
+        .catch(function (error) {
+            console.log("Could not load current user:", error);
+            loadSavedPosts();
+        });
+}
+
+
+function loadSavedPosts() {
+    fetch("/api/posts")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                console.log("Could not load posts.");
+                return;
+            }
+
+            const firstStaticPost =
+                postsContainer.querySelector(".instagram-post:not(.newly-created-post)");
+
+            data.posts.forEach(function (postData) {
+                const postElement =
+                    createPostElementFromDatabase(postData);
+
+                postsContainer.insertBefore(
+                    postElement,
+                    firstStaticPost
+                );
+            });
+
+            filterPosts();
+        })
+        .catch(function (error) {
+            console.log("Could not connect to posts API:", error);
+        });
+}
+
+
+function loadGroupsForCreatePost() {
+    fetch("/api/groups")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                console.log("Could not load groups.");
+                return;
+            }
+
+            /*
+                Create-post group dropdown
+            */
+
+            postGroupInput.innerHTML = "";
+
+            const noGroupCreateOption =
+                document.createElement("option");
+
+            noGroupCreateOption.value = "";
+            noGroupCreateOption.textContent = "No group";
+
+            postGroupInput.appendChild(noGroupCreateOption);
+
+
+            /*
+                Search/filter group dropdown
+            */
+
+            postGroupFilter.innerHTML = "";
+
+            const allGroupsSearchOption =
+                document.createElement("option");
+
+            allGroupsSearchOption.value = "all";
+            allGroupsSearchOption.textContent = "All groups";
+
+            postGroupFilter.appendChild(allGroupsSearchOption);
+
+            const noGroupSearchOption =
+                document.createElement("option");
+
+            noGroupSearchOption.value = "none";
+            noGroupSearchOption.textContent = "No group";
+
+            postGroupFilter.appendChild(noGroupSearchOption);
+
+
+            /*
+                Add real MongoDB groups to both dropdowns
+            */
+
+            data.groups.forEach(function (group) {
+                const createOption =
+                    document.createElement("option");
+
+                createOption.value = group._id;
+                createOption.textContent = group.name;
+
+                postGroupInput.appendChild(createOption);
+
+
+                const searchOption =
+                    document.createElement("option");
+
+                searchOption.value = group._id;
+                searchOption.textContent = group.name;
+
+                postGroupFilter.appendChild(searchOption);
+            });
+        })
+        .catch(function (error) {
+            console.log("Could not load groups:", error);
+        });
+}
+
+
+loadGroupsForCreatePost();
+loadCurrentUserForFeed();

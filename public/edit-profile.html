@@ -28,14 +28,25 @@
                 Edit profile
             </h1>
 
-            <form
+                <form
                 id="edit-profile-form"
                 novalidate>
+
+                <label for="edit-full-name">
+                    Full name
+                </label>
+
+                <input
+                    type="text"
+                    id="edit-full-name"
+                    class="user-page-input"
+                    maxlength="50">
 
                 <label for="edit-username">
                     Username
                 </label>
 
+                
                 <input
                     type="text"
                     id="edit-username"
@@ -94,7 +105,7 @@
         </div>
 
     </div>
-
+    <script src="js/user-session.js"></script>
     <script src="js/edit-profile.js"></script>
 
 </body>

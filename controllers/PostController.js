@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Post = require("../models/Post");
 
 exports.getPosts = async function (req, res) {
@@ -19,8 +20,9 @@ exports.getPosts = async function (req, res) {
         }
 
         const posts = await Post.find(filter)
-            .populate("author", "username fullName profileImage")
-            .sort({ createdAt: -1 });
+    .populate("author", "username fullName profileImage")
+    .populate("group", "name")
+    .sort({ createdAt: -1 });
 
         res.json({
             success: true,
@@ -41,6 +43,7 @@ exports.createPost = async function (req, res) {
         const postType = req.body.postType;
         const caption = req.body.caption || "";
         const location = req.body.location || "";
+        const groupId = req.body.group || "";
 
         if (!postType) {
             return res.status(400).json({
@@ -69,16 +72,27 @@ exports.createPost = async function (req, res) {
             });
         }
 
+        const userId = req.session.userId || (req.session.user && req.session.user._id);
+
+        if (groupId !== "" && !mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({
+        success: false,
+        message: "Invalid group selected."
+    });
+}
+
         const newPost = await Post.create({
-            author: req.session.userId,
+            author: userId,
             postType: postType,
             caption: caption,
             mediaUrl: mediaUrl,
-            location: location
+            location: location,
+            group: groupId || null
         });
 
         const populatedPost = await Post.findById(newPost._id)
-            .populate("author", "username fullName profileImage");
+    .populate("author", "username fullName profileImage")
+    .populate("group", "name");
 
         res.status(201).json({
             success: true,
@@ -105,25 +119,39 @@ exports.updatePost = async function (req, res) {
             });
         }
 
-        if (post.author.toString() !== req.session.userId) {
+        const userId =
+            req.session.userId ||
+            (req.session.user && req.session.user._id);
+
+        if (
+            !post.author ||
+            post.author.toString() !== userId
+        ) {
             return res.status(403).json({
                 success: false,
                 message: "You can only edit your own posts."
             });
         }
 
-        post.caption = req.body.caption || post.caption;
-        post.location = req.body.location || post.location;
+        post.caption =
+            req.body.caption || post.caption;
+
+        post.location =
+            req.body.location || post.location;
 
         if (req.file) {
-            post.mediaUrl = "/uploads/" + req.file.filename;
+            post.mediaUrl =
+                "/uploads/" + req.file.filename;
         }
 
         await post.save();
 
+        const updatedPost = await Post.findById(post._id)
+            .populate("author", "username fullName profileImage");
+
         res.json({
             success: true,
-            post: post
+            post: updatedPost
         });
     } catch (error) {
         res.status(500).json({
@@ -146,7 +174,14 @@ exports.deletePost = async function (req, res) {
             });
         }
 
-        if (post.author.toString() !== req.session.userId) {
+        const userId =
+            req.session.userId ||
+            (req.session.user && req.session.user._id);
+
+        if (
+            !post.author ||
+            post.author.toString() !== userId
+        ) {
             return res.status(403).json({
                 success: false,
                 message: "You can only delete your own posts."
@@ -163,6 +198,28 @@ exports.deletePost = async function (req, res) {
         res.status(500).json({
             success: false,
             message: "Failed to delete post.",
+            error: error.message
+        });
+    }
+};
+
+exports.getReels = async function (req, res) {
+    try {
+        const reels = await Post.find({
+            postType: "video"
+        })
+            .populate("author", "username fullName profileImage")
+            .populate("group", "name")
+            .sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            reels: reels
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to get reels.",
             error: error.message
         });
     }

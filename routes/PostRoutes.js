@@ -4,6 +4,10 @@ const path = require("path");
 
 const postController = require("../controllers/PostController");
 
+const {
+    requireLogin
+} = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -25,22 +29,35 @@ const upload = multer({
     storage: storage
 });
 
-router.get("/", postController.getPosts);
+router.get(
+    "/",
+    requireLogin,
+    postController.getPosts
+);
+
+router.get(
+    "/reels",
+    requireLogin,
+    postController.getReels
+);
 
 router.post(
     "/",
+    requireLogin,
     upload.single("media"),
     postController.createPost
 );
 
 router.put(
     "/:id",
+    requireLogin,
     upload.single("media"),
     postController.updatePost
 );
 
 router.delete(
     "/:id",
+    requireLogin,
     postController.deletePost
 );
 

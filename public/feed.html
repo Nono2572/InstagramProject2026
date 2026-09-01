@@ -34,7 +34,7 @@
                         <span>Home</span>
                     </a>
 
-                    <a class="sidebar-item" href="#">
+                    <a class="sidebar-item" href="#" id="reels-button">
                         <i class="bi bi-play-btn"></i>
                         <span>Reels</span>
                     </a>
@@ -139,7 +139,7 @@
 
                     <!-- Post 1 -->
 
-                    <div class="instagram-post" data-post-type="image">
+                    <div class="instagram-post" data-post-type="image" data-group-id="">
 
                         <div class="post-header">
 
@@ -195,7 +195,7 @@
 
                     <!-- Post 2 -->
 
-                    <div class="instagram-post" data-post-type="image">
+                    <div class="instagram-post" data-post-type="image" data-group-id="">
 
                         <div class="post-header">
 
@@ -248,9 +248,9 @@
                         </p>
 
                     </div>
-                                        <!-- Post 3 -->
+                    <!-- Post 3 -->
 
-                    <div class="instagram-post" data-post-type="image">
+                    <div class="instagram-post" data-post-type="image" data-group-id="">
 
                         <div class="post-header">
                             <img src="https://picsum.photos/50/50?random=13">
@@ -472,6 +472,16 @@
 
                 </select>
 
+                <label for="post-group">
+                    Group
+                </label>
+
+                <select id="post-group" class="create-post-input">
+                    <option value="">
+                        No group
+                    </option>
+                </select>
+
                 <div id="media-input-section">
 
                     <label for="post-media">
@@ -517,7 +527,7 @@
         </div>
 
     </div>
-        <!-- Search and filter popup -->
+    <!-- Search and filter popup -->
 
     <div id="search-overlay" class="search-overlay">
 
@@ -560,11 +570,28 @@
                 </option>
 
                 <option value="video">
-                    Videos
+                    Videos / Reels
                 </option>
 
                 <option value="text">
                     Text only
+                </option>
+
+            </select>
+
+            <label for="post-group-filter">
+                Group
+            </label>
+
+           <select id="post-group-filter"
+                class="search-input">
+
+                <option value="all">
+                    All groups
+                </option>
+
+                <option value="none">
+                    No group
                 </option>
 
             </select>
@@ -635,12 +662,9 @@
 
     </div>
 
-    <!-- JavaScript -->
-
-    <script src="feed.js"></script>
-
-    <!-- Session Management -->
+    
     <script src="js/user-session.js"></script>
+    <script src="feed.js"></script>
 
 </body>
 

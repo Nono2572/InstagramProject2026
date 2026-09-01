@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema(
         group: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Group",
-            required: false
+            default: null
         },
 
         postType: {

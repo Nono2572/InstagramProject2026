@@ -19,19 +19,11 @@ exports.getPosts = async function (req, res) {
             ];
         }
 
-        const posts =
-    await Post.find(filter)
-        .populate(
-            "author",
-            "username fullName profileImage"
-        )
-        .populate(
-            "group",
-            "name"
-        )
-        .sort({
-            createdAt: -1
-        });
+        const posts = await Post.find(filter)
+    .populate("author", "username fullName profileImage")
+    .populate("group", "name")
+    .populate("comments.author", "username fullName profileImage")
+    .sort({ createdAt: -1 });
 
 
 const currentUserId =
@@ -245,6 +237,62 @@ exports.deletePost = async function (req, res) {
         res.status(500).json({
             success: false,
             message: "Failed to delete post.",
+            error: error.message
+        });
+    }
+};
+
+exports.addComment = async function (req, res) {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found."
+            });
+        }
+
+        const userId =
+            req.session.userId ||
+            (req.session.user && req.session.user._id);
+
+        const commentText = req.body.text || "";
+
+        if (commentText.trim() === "") {
+            return res.status(400).json({
+                success: false,
+                message: "Comment cannot be empty."
+            });
+        }
+
+        post.comments.push({
+            author: userId,
+            text: commentText.trim()
+        });
+
+        post.commentsCount = post.comments.length;
+
+        await post.save();
+
+        const updatedPost = await Post.findById(post._id)
+            .populate("author", "username fullName profileImage")
+            .populate("group", "name")
+            .populate("comments.author", "username fullName profileImage");
+
+        const newComment =
+            updatedPost.comments[updatedPost.comments.length - 1];
+
+        res.status(201).json({
+            success: true,
+            comment: newComment,
+            commentsCount: updatedPost.comments.length,
+            post: updatedPost
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to add comment.",
             error: error.message
         });
     }

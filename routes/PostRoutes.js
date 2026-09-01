@@ -48,6 +48,12 @@ router.post(
     postController.createPost
 );
 
+router.post(
+    "/:id/comments",
+    requireLogin,
+    postController.addComment
+);
+
 router.put(
     "/:id",
     requireLogin,

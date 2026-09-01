@@ -993,31 +993,43 @@ if (postData.isLiked) {
         document.createTextNode(postData.caption || "")
     );
 
-    const comments =
-        document.createElement("p");
+   const comments =
+    document.createElement("p");
 
-    comments.classList.add(
-        "comments"
-    );
+comments.classList.add(
+    "comments"
+);
 
+const commentsAmount =
+    postData.comments
+        ? postData.comments.length
+        : postData.commentsCount || 0;
 
+if (commentsAmount === 1) {
     comments.textContent =
-        (postData.commentsCount || 0) +
-        " comments";
+        "View 1 comment";
+} else {
+    comments.textContent =
+        "View all " + commentsAmount + " comments";
+}
 
+post.dataset.commentsCount =
+    commentsAmount;
 
-    post.dataset.commentsCount =
-        postData.commentsCount || 0;
+post.append(actions, likes);
 
-    post.append(actions, likes);
+if (postData.caption !== "") {
+    post.appendChild(captionParagraph);
+}
 
-    if (postData.caption !== "") {
-        post.appendChild(captionParagraph);
-    }
+post.appendChild(comments);
 
-    post.appendChild(comments);
+addCommentSectionToPost(
+    post,
+    postData.comments || []
+);
 
-    return post;
+return post;
 }
 
 
@@ -1297,23 +1309,26 @@ function filterPosts() {
 }
 
 
-reelsButton.addEventListener("click", function (event) {
-    event.preventDefault();
+if (reelsButton) {
+    reelsButton.addEventListener("click", function (event) {
+        event.preventDefault();
 
-    appliedSearchText = "";
-    appliedPostType = "video";
+        appliedSearchText = "";
+        appliedPostType = "video";
+        appliedGroupId = "all";
 
-    postSearchInput.value = appliedSearchText;
-    postTypeFilter.value = appliedPostType;
-    postGroupFilter.value = appliedGroupId;
+        postSearchInput.value = "";
+        postTypeFilter.value = "video";
+        postGroupFilter.value = "all";
 
-    filterPosts();
+        filterPosts();
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     });
-});
+}
 
 
 /* =========================================================
@@ -1424,7 +1439,7 @@ const commentsWindowTypingMessage =
     );
 
 
-function addCommentSectionToPost(post) {
+function addCommentSectionToPost(post, savedComments) {
     if (
         post.querySelector(
             ".comments-feature"
@@ -1433,11 +1448,14 @@ function addCommentSectionToPost(post) {
         return;
     }
 
+    if (!savedComments) {
+        savedComments = [];
+    }
+
     const existingCommentsText =
         post.querySelector(".comments");
 
     let initialCommentsCount = 0;
-
 
     if (existingCommentsText) {
         const numberMatch =
@@ -1454,19 +1472,19 @@ function addCommentSectionToPost(post) {
             "none";
     }
 
+    if (savedComments.length > 0) {
+        initialCommentsCount =
+            savedComments.length;
+    }
 
     post.dataset.commentsCount =
         initialCommentsCount;
 
-
-    if (!post.commentsListData) {
-        post.commentsListData = [];
-    }
-
+    post.commentsListData =
+        savedComments;
 
     const commentsFeature =
-        document.createElement("div");
-
+    document.createElement("div");
     commentsFeature.classList.add(
         "comments-feature"
     );

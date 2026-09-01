@@ -64,8 +64,6 @@ async function loadCurrentProfile() {
         bioInput.value =
             user.bio || "";
 
-        profileImageInput.value =
-            user.profileImage || "";
 
     } catch (error) {
         editProfileMessage.textContent =
@@ -90,9 +88,6 @@ editProfileForm.addEventListener(
 
         const bio =
             bioInput.value.trim();
-
-        const profileImage =
-            profileImageInput.value.trim();
 
         editProfileMessage.textContent = "";
 
@@ -122,29 +117,42 @@ editProfileForm.addEventListener(
         }
 
         try {
-            const response = await fetch(
-                "/api/users/me",
+            const formData = new FormData();
 
-                {
-                    method: "PUT",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        fullName: fullName,
-                        username: username,
-                        email: email,
-                        bio: bio,
-                        profileImage: profileImage
-                    })
-                }
+            formData.append(
+                "fullName",
+                fullNameInput.value.trim()
             );
 
+            formData.append(
+                "username",
+                usernameInput.value.trim()
+            );
+
+            formData.append(
+                "email",
+                emailInput.value.trim()
+            );
+
+            formData.append(
+                "bio",
+                bioInput.value.trim()
+            );
+
+            if (profileImageInput.files[0]) {
+                formData.append(
+                    "profileImage",
+                    profileImageInput.files[0]
+                );
+            }
+
+            const response = await fetch("/api/users/me", {
+                method: "PUT",
+                body: formData
+            });
+
             const result =
-                await response.json();
+            await response.json();
 
             if (!response.ok) {
                 editProfileMessage.textContent =

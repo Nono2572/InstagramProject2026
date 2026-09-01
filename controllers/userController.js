@@ -243,6 +243,11 @@ async function updateCurrentUser(req, res) {
                 "images/BlankProfile.jpg";
         }
 
+        if (req.file) {
+    updatedFields.profileImage =
+        "/uploads/" + req.file.filename;
+        }   
+
         const updatedUser = await User.findByIdAndUpdate(
             req.session.userId,
             updatedFields,
@@ -278,6 +283,8 @@ async function updateCurrentUser(req, res) {
             message: getErrorMessage(error)
         });
     }
+
+    
 }
 
 async function deleteCurrentUser(req, res) {

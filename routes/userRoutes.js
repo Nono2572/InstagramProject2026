@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
 
 const {
     registerUser,
@@ -24,7 +26,25 @@ const {
 } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, "public/uploads");
+    },
 
+    filename: function (req, file, callback) {
+        const uniqueName =
+            Date.now() + "-" + Math.round(Math.random() * 1000000);
+
+        const extension =
+            path.extname(file.originalname);
+
+        callback(null, uniqueName + extension);
+    }
+});
+
+const upload = multer({
+    storage: storage
+});
 router.get(
     "/",
     requireLogin,
@@ -62,6 +82,7 @@ router.get(
 router.put(
     "/me",
     requireLogin,
+    upload.single("profileImage"),
     updateCurrentUser
 );
 
